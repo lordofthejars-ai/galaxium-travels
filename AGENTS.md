@@ -1,0 +1,17 @@
+# AGENTS.md
+
+This file provides guidance to agents when working with code in this repository.
+
+- Prefer configured MCP integrations when available, especially for GitHub workflows, per [`.bob/rules/rules.md`](.bob/rules/rules.md).
+- Local startup lives in [`deployment_scripts/local/start_locally.sh`](deployment_scripts/local/start_locally.sh), which hard-kills ports 8001, 5173, and 8080 before launching backend, frontend, and the Java hold service.
+- Backend single-test runs must start inside [`booking_system_backend/`](booking_system_backend) because [`pytest.ini`](booking_system_backend/pytest.ini) fixes `testpaths = tests`; use [`pytest tests/test_services.py::test_name -v`](booking_system_backend/tests/test_services.py:1).
+- Test isolation depends on patching both [`db.SessionLocal`](booking_system_backend/db.py:22) and [`server.SessionLocal`](booking_system_backend/server.py:10) to the same in-memory session; patching only one still hits the real DB.
+- The MCP server must be created before the FastAPI app so lifespan composition works; see [`mcp = FastMCP(...)`](booking_system_backend/server.py:22) before [`app = FastAPI(...)`](booking_system_backend/server.py:128).
+- Backend service-layer business failures return [`ErrorResponse`](booking_system_backend/schemas.py) unions instead of raising; the MCP wrappers convert those failures to exceptions, while REST returns payloads.
+- Booking confirmation is identity-checked by both ID and name: [`book_flight()`](booking_system_backend/services/booking.py:15) returns `NAME_MISMATCH` if the [`user_id`](booking_system_backend/services/booking.py:15) exists but the supplied name differs.
+- User lookups and registration lowercase emails before querying, so any feature matching frontend identity to backend records must preserve exact names but can normalize email casing; see [`register_user()`](booking_system_backend/services/user.py:14) and [`get_user()`](booking_system_backend/services/user.py:40).
+- Frontend API callers cannot rely on HTTP status alone; use [`isErrorResponse()`](booking_system_frontend/src/services/api.ts:208) because business failures commonly arrive as `{ success: false, ... }`.
+- Quote/hold calls must keep [`assertNotProxyError()`](booking_system_frontend/src/services/api.ts:161): the Python proxy can return `{ "error": ... }` with HTTP 200 when the Java service is down.
+- Hold state is intentionally split: the Java service stores quote/hold records in SQLite at [`holds.db`](inventory_hold_service/src/main/resources/application.properties:6), but the frontend also keeps per-user hold snapshots in [`localStorage`](booking_system_frontend/src/utils/holdStorage.ts:3) under `galaxium_holds_${userId}`.
+- Hold confirmation is not self-contained in Java: [`HoldService.confirmHold()`](inventory_hold_service/src/main/java/com/galaxium/holdservice/service/HoldService.java:75) calls the Python backend at [`/internal/bookings/from-hold`](inventory_hold_service/src/main/java/com/galaxium/holdservice/client/PythonBackendClient.java:32), so cross-service changes must preserve that contract.
+- Quote and hold IDs are generated from repository counts ([`Q-<year>-<seq>`](inventory_hold_service/src/main/java/com/galaxium/holdservice/service/QuoteService.java:72), [`H-<year>-<seq>`](inventory_hold_service/src/main/java/com/galaxium/holdservice/service/HoldService.java:157)); they are demo-friendly, not collision-safe under concurrent writers.
