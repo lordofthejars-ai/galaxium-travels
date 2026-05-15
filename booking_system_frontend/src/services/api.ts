@@ -231,6 +231,22 @@ export const healthCheck = async (): Promise<{ status: string }> => {
   return response.data;
 };
 
+// ==================== ChatBot Endpoint ====================
+
+/**
+ * Send a message to the chatbot and get a response
+ */
+export const sendChatMessage = async (
+  userId: number,
+  message: string
+): Promise<string | { response: string }> => {
+  const response = await api.post(`/chatbot/${userId}`, {
+    message,
+  });
+  // Backend may return plain text or JSON object
+  return response.data;
+};
+
 export default api;
 
 // Made with Bob

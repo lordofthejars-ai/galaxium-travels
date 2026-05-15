@@ -2,6 +2,7 @@ import type { ReactNode } from 'react';
 import { Header } from './Header';
 import { Footer } from './Footer';
 import { Starfield } from '../common/Starfield';
+import { ChatBot } from '../common/ChatBot';
 import { Toaster } from 'react-hot-toast';
 
 interface LayoutProps {
@@ -52,6 +53,9 @@ export const Layout = ({ children }: LayoutProps) => {
       
       {/* Footer */}
       <Footer />
+      
+      {/* ChatBot */}
+      <ChatBot />
     </div>
   );
 };
