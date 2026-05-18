@@ -1,0 +1,50 @@
+= 🚀 Galaxium Travels - Interplanetary Booking System
+
+
+A complete full-stack application for booking interplanetary space travel, featuring a modern React frontend and 
+Quarkus backend with REST and ChatBot support.
+The Hold Service (Reservations) is implemented in Spring Boot.
+
+== 🌟 Features
+
+Modern Space-Themed UI:: - Beautiful, responsive interface with animated starfield
+Full Booking System:: - Browse flights, make bookings, manage reservations
+Three Seat Classes:: - Economy, Business, and Galaxium Class with independent availability tracking
+Dynamic Pricing:: - Class-based multipliers (1x, 2.5x, 5x) applied to base flight prices
+Type-Safe:: - Full TypeScript frontend and Java type hints with strict validation
+Real-Time Updates:: - Live seat availability per class and booking status
+User Management:: - Simple name/email authentication
+AI:: - Chat Bot integration
+
+== 🚀 Manual Quick Start
+
+* NodeJS 18+
+* Java 21+
+
+=== Frontend
+
+[source, bash]
+----
+cd booking_system_frontend
+npm install
+npm run dev
+----
+
+=== Backend
+
+[source, bash]
+----
+cd booking-system-backend-quarkus
+./mvnw quarkus:dev
+----
+
+=== Hold Service
+
+[source, bash]
+----
+cd inventory_hold_service
+./mvnw clean package -DskipTests
+java -jar target/inventory-hold-service-1.0.0.jar
+----
+
+Then you can go to the browser http://localhost:5173/ and start using the app.
