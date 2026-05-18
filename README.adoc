@@ -20,6 +20,7 @@ AI:: - Chat Bot integration
 
 * NodeJS 18+
 * Java 21+
+* Podman/Docker
 
 === Frontend
 
@@ -37,6 +38,8 @@ npm run dev
 cd booking-system-backend-quarkus
 ./mvnw quarkus:dev
 ----
+
+IMPORTANT: You need to have Podman/Docker (Desktop) installed to run this demo. Quarkus application will start the PostgreSQL container automatically.
 
 === Hold Service
 
