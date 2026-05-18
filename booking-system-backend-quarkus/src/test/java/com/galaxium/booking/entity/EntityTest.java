@@ -1,8 +1,15 @@
 package com.galaxium.booking.entity;
 
+import com.galaxium.booking.dto.FlightDto;
+import com.galaxium.booking.service.FlightService;
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.TestTransaction;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.core.MultivaluedHashMap;
+import jakarta.ws.rs.core.MultivaluedMap;
 import org.junit.jupiter.api.Test;
+
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -63,6 +70,29 @@ class EntityTest {
         assertTrue(User.emailExists("bob@test.com"));
         assertTrue(User.emailExists("BOB@TEST.COM")); // Case-insensitive
         assertFalse(User.emailExists("nonexistent@test.com"));
+    }
+
+    @Inject
+    FlightService flightService;
+
+    @Test
+    @TestTransaction
+    void testFlightFindByDestination() {
+        Flight flight = new Flight();
+        flight.origin = "Earth";
+        flight.destination = "Mars";
+        flight.departureTime = "2026-06-01 10:00";
+        flight.arrivalTime = "2026-06-01 18:00";
+        flight.basePrice = 500;
+        flight.economySeatsAvailable = 60;
+        flight.businessSeatsAvailable = 30;
+        flight.galaxiumSeatsAvailable = 10;
+        flight.persist();
+
+        MultivaluedMap<String, String> map = new MultivaluedHashMap<>();
+        map.put("destination", List.of("Mars"));
+        List<FlightDto> flightDtos = flightService.listFlights(map);
+        System.out.println(flightDtos);
     }
 
     @Test

@@ -46,6 +46,25 @@ public class FlightDto {
     public FlightDto() {
     }
 
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("FlightDto{");
+        sb.append("flightId=").append(flightId);
+        sb.append(", origin='").append(origin).append('\'');
+        sb.append(", destination='").append(destination).append('\'');
+        sb.append(", departureTime='").append(departureTime).append('\'');
+        sb.append(", arrivalTime='").append(arrivalTime).append('\'');
+        sb.append(", basePrice=").append(basePrice);
+        sb.append(", economySeatsAvailable=").append(economySeatsAvailable);
+        sb.append(", businessSeatsAvailable=").append(businessSeatsAvailable);
+        sb.append(", galaxiumSeatsAvailable=").append(galaxiumSeatsAvailable);
+        sb.append(", economyPrice=").append(economyPrice);
+        sb.append(", businessPrice=").append(businessPrice);
+        sb.append(", galaxiumPrice=").append(galaxiumPrice);
+        sb.append('}');
+        return sb.toString();
+    }
+
     /**
      * Create DTO from entity with computed prices.
      */
