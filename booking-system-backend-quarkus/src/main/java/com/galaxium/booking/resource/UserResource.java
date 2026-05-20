@@ -60,7 +60,7 @@ public class UserResource {
     private Response toErrorResponse(ErrorResponse error) {
         Response.Status status = switch (error.errorCode) {
             case "USER_NOT_FOUND" -> Response.Status.NOT_FOUND;
-            case "EMAIL_ALREADY_EXISTS" -> Response.Status.CONFLICT;
+            case "EMAIL_ALREADY_EXISTS", "EMAIL_EXISTS" -> Response.Status.CONFLICT;
             case "INVALID_EMAIL" -> Response.Status.BAD_REQUEST;
             default -> Response.Status.BAD_REQUEST;
         };
