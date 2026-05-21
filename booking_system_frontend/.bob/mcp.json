@@ -1,0 +1,1 @@
+{"mcpServers":{"chrome-devtools":{"command":"npx","args":["-y","chrome-devtools-mcp@latest"],"disabled":false,"alwaysAllow":["new_page","take_snapshot","navigate_page","click","take_screenshot","performance_start_trace","performance_analyze_insight","fill_form","wait_for"]}}}
