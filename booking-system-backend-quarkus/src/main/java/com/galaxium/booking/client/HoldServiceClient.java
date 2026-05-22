@@ -37,7 +37,7 @@ public interface HoldServiceClient {
      * Create a hold from an existing quote.
      */
     @POST
-    @Path("/quotes/{quoteId}/holds")
+    @Path("/holds/from-quote/{quoteId}")
     @Produces(MediaType.APPLICATION_JSON)
     String createHold(@PathParam("quoteId") String quoteId);
 
