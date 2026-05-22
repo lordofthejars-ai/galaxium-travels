@@ -45,9 +45,8 @@ IMPORTANT: You need to have Podman/Docker (Desktop) installed to run this demo. 
 
 [source, bash]
 ----
-cd inventory_hold_service
-./mvnw clean package -DskipTests
-java -jar target/inventory-hold-service-1.0.0.jar
+cd inventory-hold-service-quarkus 
+./mvnw quarkus:dev
 ----
 
 Then you can go to the browser http://localhost:5173/ and start using the app.
