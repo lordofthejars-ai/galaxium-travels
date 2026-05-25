@@ -27,6 +27,19 @@ AI:: - Chat Bot integration
 [source, bash]
 ----
 cd booking_system_frontend
+----
+
+Create a `.env` file with the following content:
+
+[source]
+----
+VITE_API_URL=http://localhost:8001
+----
+
+Then:
+
+[source, bash]
+----
 npm install
 npm run dev
 ----
