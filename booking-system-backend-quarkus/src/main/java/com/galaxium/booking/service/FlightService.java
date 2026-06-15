@@ -132,6 +132,10 @@ public class FlightService {
             .map(FlightDto::from)
             .collect(Collectors.toList());
     }
+
+    public FlightDto findFlightById(Long id) {
+        return FlightDto.from(Flight.findById(id));
+    }
 }
 
 // Made with Bob

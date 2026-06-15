@@ -1,11 +1,13 @@
-package com.galaxium.booking.service;
+package com.galaxium.booking.ai;
 
+import com.galaxium.booking.service.BookingSearchTool;
+import com.galaxium.booking.service.FlightSearchTool;
+import dev.langchain4j.agentic.Agent;
 import dev.langchain4j.service.SystemMessage;
 import dev.langchain4j.service.UserMessage;
-import io.quarkiverse.langchain4j.RegisterAiService;
+import io.quarkiverse.langchain4j.ToolBox;
 
-@RegisterAiService(tools = BookingSearchTool.class)
-public interface ChatbotAiService {
+public interface BookingAgent {
 
     @SystemMessage("""
         You are a helpful assistant for Galaxium Travels, a space travel booking system.
@@ -17,7 +19,8 @@ public interface ChatbotAiService {
         You have access to tools that can help you retrieve booking information.
         When a user asks about their bookings, use the available tools to search for them.
         """)
+    @Agent(description = "You are a helpful assistant for Galaxium Travels, a space travel booking system tp get information about bookings",
+        outputKey = "answer")
+    @ToolBox({BookingSearchTool.class, FlightSearchTool.class})
     String chat(@UserMessage String userMessage);
 }
-
-// Made with Bob

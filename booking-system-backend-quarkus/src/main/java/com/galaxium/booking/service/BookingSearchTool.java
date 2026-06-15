@@ -1,6 +1,7 @@
 package com.galaxium.booking.service;
 
 import com.galaxium.booking.dto.BookingDto;
+import com.galaxium.booking.dto.FlightDto;
 import dev.langchain4j.agent.tool.Tool;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -21,6 +22,12 @@ public class BookingSearchTool {
     @Inject
     Logger logger;
 
+    @Tool("Search booking information by booking id")
+    public BookingDto findBookingById(Long bookingId) {
+        logger.infof("Tool invoked for searching booking id " + bookingId);
+        return bookingService.findBookingById(bookingId);
+    }
+
     /**
      * Find all bookings for a specific user.
      * 
@@ -32,6 +39,7 @@ public class BookingSearchTool {
         logger.infof("Tool invoked for searching bookings for the user " + userId);
         return bookingService.getBookings(userId);
     }
+
 }
 
 // Made with Bob

@@ -1,8 +1,8 @@
 package com.galaxium.booking.resource;
 
-import com.galaxium.booking.service.ChatbotAiService;
+import com.galaxium.booking.ai.BookingAgent;
+import com.galaxium.booking.ai.ChatbotSupervisorAgent;
 import jakarta.inject.Inject;
-import jakarta.validation.Valid;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
@@ -17,7 +17,7 @@ import org.jboss.resteasy.reactive.RestPath;
 public class ChatbotResource {
 
     @Inject
-    ChatbotAiService chatbotAiService;
+    ChatbotSupervisorAgent chatbotAiService;
 
     @Inject
     Logger logger;

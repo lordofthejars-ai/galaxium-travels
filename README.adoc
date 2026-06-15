@@ -62,4 +62,6 @@ cd inventory-hold-service-quarkus
 ./mvnw quarkus:dev
 ----
 
+You *only* need this service if you plan to book flights.
+
 Then you can go to the browser http://localhost:5173/ and start using the app.

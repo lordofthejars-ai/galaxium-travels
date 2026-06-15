@@ -218,6 +218,10 @@ public class BookingService {
         return Result.success(BookingDto.from(booking));
     }
 
+    public BookingDto findBookingById(Long id) {
+        return BookingDto.from(Booking.findById(id));
+    }
+
     /**
      * Retrieve all bookings for a specific user.
      * 
