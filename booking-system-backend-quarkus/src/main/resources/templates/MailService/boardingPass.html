@@ -1,0 +1,146 @@
+{@com.galaxium.booking.dto.UserDto userDto}
+{@com.galaxium.booking.boardingpass.BoardingPassData boardingPassData}
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Your Boarding Pass is Ready</title>
+</head>
+
+<body style="margin:0;padding:0;background-color:#060b1f;font-family:Arial,Helvetica,sans-serif;">
+
+<table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background-color:#060b1f;">
+    <tr>
+        <td align="center">
+
+            <table role="presentation" width="700" cellspacing="0" cellpadding="0" border="0" style="width:700px;max-width:700px;background-color:#0d1435;border-radius:16px;overflow:hidden;">
+
+                <tr>
+                    <td align="center" style="padding:40px 20px 20px 20px;background:linear-gradient(180deg,#101c4d,#0d1435);">
+
+                        <img src="cid:logo@quarkus.io"
+                             alt="Galactic Trips"
+                             width="120"
+                             style="display:block;border:0;">
+
+                        <h1 style="margin:20px 0 10px 0;color:#ffffff;font-size:32px;font-weight:bold;">
+                            Your Boarding Pass Is Ready
+                        </h1>
+
+                        <p style="margin:0;color:#c9d4ff;font-size:16px;line-height:24px;">
+                            Prepare for departure. Your interplanetary journey has been confirmed.
+                        </p>
+
+                    </td>
+                </tr>
+
+                <tr>
+                    <td style="padding:30px;">
+
+                        <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0"
+                               style="background-color:#131d4d;border:1px solid #27336d;border-radius:12px;">
+
+                            <tr>
+                                <td style="padding:25px;">
+
+                                    <h2 style="margin:0 0 20px 0;color:#e5bf6b;font-size:20px;">
+                                        Trip Information
+                                    </h2>
+
+                                    <table width="100%" cellspacing="0" cellpadding="0" border="0">
+
+                                        <tr>
+                                            <td width="50%" style="padding:8px 0;color:#9fb0ff;font-size:12px;">
+                                                PASSENGER
+                                            </td>
+                                            <td width="50%" style="padding:8px 0;color:#ffffff;font-size:16px;font-weight:bold;">
+                                                {userDto.name}
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <td style="padding:8px 0;color:#9fb0ff;font-size:12px;">
+                                                ORIGIN
+                                            </td>
+                                            <td style="padding:8px 0;color:#ffffff;font-size:16px;">
+                                                {boardingPassData.origin}
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <td style="padding:8px 0;color:#9fb0ff;font-size:12px;">
+                                                DESTINATION
+                                            </td>
+                                            <td style="padding:8px 0;color:#ffffff;font-size:16px;">
+                                                {boardingPassData.destination}
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <td style="padding:8px 0;color:#9fb0ff;font-size:12px;">
+                                                FLIGHT ID
+                                            </td>
+                                            <td style="padding:8px 0;color:#ffffff;font-size:16px;">
+                                                {boardingPassData.flightId}
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <td style="padding:8px 0;color:#9fb0ff;font-size:12px;">
+                                                DEPARTURE
+                                            </td>
+                                            <td style="padding:8px 0;color:#ffffff;font-size:16px;">
+                                                {boardingPassData.departureTime}
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <td style="padding:8px 0;color:#9fb0ff;font-size:12px;">
+                                                BOOKING ID
+                                            </td>
+                                            <td style="padding:8px 0;color:#ffffff;font-size:16px;">
+                                                {boardingPassData.bookingId}
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <td style="padding:8px 0;color:#9fb0ff;font-size:12px;">
+                                                TRIP CLASS
+                                            </td>
+                                            <td style="padding:8px 0;color:#ffffff;font-size:16px;">
+                                                {boardingPassData.tripClass}
+                                            </td>
+                                        </tr>
+
+                                    </table>
+
+                                </td>
+                            </tr>
+
+                        </table>
+
+                    </td>
+                </tr>
+
+                <tr>
+                    <td align="center"
+                        style="padding:30px;background-color:#080d26;border-top:1px solid #27336d;">
+
+                        <p style="margin:0;color:#7f8cc7;font-size:12px;line-height:20px;">
+                            Galactic Trips Interplanetary Transport Authority
+                            <br>
+                            Safe travels across the Solar System.
+                        </p>
+
+                    </td>
+                </tr>
+
+            </table>
+
+        </td>
+    </tr>
+</table>
+
+</body>
+</html>

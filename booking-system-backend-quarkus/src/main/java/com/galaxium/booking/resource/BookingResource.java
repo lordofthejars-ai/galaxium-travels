@@ -6,11 +6,14 @@ import com.galaxium.booking.boardingpass.BoardingPassStorage;
 import com.galaxium.booking.dto.BookingDto;
 import com.galaxium.booking.dto.BookingRequest;
 import com.galaxium.booking.dto.ErrorResponse;
+import com.galaxium.booking.dto.FlightDto;
 import com.galaxium.booking.dto.Result;
+import com.galaxium.booking.dto.UserDto;
 import com.galaxium.booking.entity.Booking;
 import com.galaxium.booking.entity.Flight;
 import com.galaxium.booking.entity.User;
 import com.galaxium.booking.service.BookingService;
+import com.galaxium.booking.service.MailService;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.*;
@@ -64,6 +67,36 @@ public class BookingResource {
     public List<BookingDto> getBookings(@PathParam("userId") Long userId) {
         List<BookingDto> bookings = bookingService.getBookings(userId);
         return bookings;
+
+    }
+
+    @Inject
+    MailService mailService;
+
+    @GET
+    @Path("/email")
+    public void email() {
+        BoardingPassData pass =
+            new BoardingPassData(
+                "Captain Nova",
+                "EARTH",
+                "MARS COLONY",
+                "GT-2085-042",
+                "BK-9XZ73K",
+                "FIRST CLASS",
+                LocalDateTime.of(
+                    2085,
+                    7,
+                    14,
+                    8,
+                    45)
+            );
+
+        UserDto userDto = new UserDto();
+        userDto.name = "Captain Nova";
+        userDto.email ="nova@example.com";
+
+        mailService.sendEmail(userDto, pass, new byte[0]);
     }
 
     @POST
@@ -72,8 +105,8 @@ public class BookingResource {
     public Response checkin(@PathParam("bookingId") Long bookingId) {
         BookingDto booking = this.bookingService.findBookingById(bookingId);
 
-        User user = User.findById(booking.userId);
-        Flight flight = Flight.findById(booking.flightId);
+        UserDto user = UserDto.from(User.findById(booking.userId));
+        FlightDto flight = FlightDto.from(Flight.findById(booking.flightId));
 
         String flightRef = booking.flightId.toString();
         String bookingRef = bookingId.toString();
