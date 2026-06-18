@@ -1,16 +1,27 @@
 package com.galaxium.booking.resource;
 
+import com.galaxium.booking.boardingpass.BoardingPassData;
+import com.galaxium.booking.boardingpass.BoardingPassService;
+import com.galaxium.booking.boardingpass.BoardingPassStorage;
 import com.galaxium.booking.dto.BookingDto;
 import com.galaxium.booking.dto.BookingRequest;
 import com.galaxium.booking.dto.ErrorResponse;
 import com.galaxium.booking.dto.Result;
+import com.galaxium.booking.entity.Booking;
+import com.galaxium.booking.entity.Flight;
+import com.galaxium.booking.entity.User;
 import com.galaxium.booking.service.BookingService;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.UriBuilder;
+import org.jboss.resteasy.reactive.RestPath;
 
+import java.net.URI;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 /**
@@ -21,6 +32,12 @@ public class BookingResource {
 
     @Inject
     BookingService bookingService;
+
+    @Inject
+    BoardingPassService boardingPassService;
+
+    @Inject
+    BoardingPassStorage boardingPassStorage;
 
     @POST
     @Path("/book")
@@ -46,8 +63,38 @@ public class BookingResource {
     @Produces(MediaType.APPLICATION_JSON)
     public List<BookingDto> getBookings(@PathParam("userId") Long userId) {
         List<BookingDto> bookings = bookingService.getBookings(userId);
-        bookings.forEach(System.out::println);
         return bookings;
+    }
+
+    @POST
+    @Path("/checkin/{bookingId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response checkin(@PathParam("bookingId") Long bookingId) {
+        BookingDto booking = this.bookingService.findBookingById(bookingId);
+
+        User user = User.findById(booking.userId);
+        Flight flight = Flight.findById(booking.flightId);
+
+        String flightRef = booking.flightId.toString();
+        String bookingRef = bookingId.toString();
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        LocalDateTime departure = LocalDateTime.parse(flight.departureTime, formatter);
+
+        BoardingPassData boardingPassData = new BoardingPassData(user.name, flight.origin, flight.destination, flightRef, bookingRef, booking.seatClass, departure);
+        String checkinId = boardingPassService.checkin(boardingPassData);
+
+        URI downloadBoardingPass = UriBuilder.fromMethod(BookingResource.class, "boardingpass")
+            .build(checkinId);
+        return Response.created(downloadBoardingPass).build();
+
+    }
+
+    @GET
+    @Path("/boardingpass/{boardingPassId}")
+    @Produces("application/pdf")
+    public byte[] boardingpass(@RestPath String boardingPassId) {
+        return boardingPassStorage.getBoardingPass(boardingPassId);
     }
 
     @POST
