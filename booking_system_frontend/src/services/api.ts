@@ -147,6 +147,43 @@ export const cancelBooking = async (
   return response.data;
 };
 
+/**
+ * Check-in for a booking
+ */
+export const checkInBooking = async (
+  bookingId: number
+): Promise<{ location: string }> => {
+  const response = await api.post(`/checkin/${bookingId}`);
+  
+  console.log('Full response:', response);
+  console.log('Response status:', response.status);
+  console.log('Response headers:', response.headers);
+  console.log('All header keys:', Object.keys(response.headers));
+  
+  // Axios lowercases all header names, so we access it as 'location'
+  const location = response.headers['location'];
+  
+  console.log('Extracted location:', location);
+  
+  if (!location) {
+    console.error('Response headers:', response.headers);
+    console.error('Response data:', response.data);
+    throw new Error('Location header not found in check-in response');
+  }
+  
+  return { location };
+};
+
+/**
+ * Download boarding pass PDF
+ */
+export const downloadBoardingPass = async (url: string): Promise<Blob> => {
+  const response = await api.get(url, {
+    responseType: 'blob',
+  });
+  return response.data;
+};
+
 // ==================== Quote & Hold Endpoints (Java Inventory Hold Service) ====================
 
 export interface CreateQuoteRequest {

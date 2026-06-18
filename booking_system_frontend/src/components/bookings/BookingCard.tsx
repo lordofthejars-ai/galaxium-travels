@@ -1,8 +1,11 @@
+import { useState } from 'react';
 import type { Booking, Flight } from '../../types';
 import { Card, Button } from '../common';
-import { Plane, Calendar, CheckCircle, XCircle, Clock, Crown, Rocket } from 'lucide-react';
+import { Plane, Calendar, CheckCircle, XCircle, Clock, Crown, Rocket, Download } from 'lucide-react';
 import { formatDate, formatCurrency } from '../../utils/formatters';
 import { motion } from 'framer-motion';
+import { checkInBooking, downloadBoardingPass } from '../../services/api';
+import toast from 'react-hot-toast';
 
 interface BookingCardProps {
   booking: Booking;
@@ -12,6 +15,50 @@ interface BookingCardProps {
 }
 
 export const BookingCard = ({ booking, flight, onCancel, isCancelling }: BookingCardProps) => {
+  const [isCheckingIn, setIsCheckingIn] = useState(false);
+  const [boardingPassUrl, setBoardingPassUrl] = useState<string | null>(null);
+  const [isDownloading, setIsDownloading] = useState(false);
+
+  const handleCheckIn = async () => {
+    setIsCheckingIn(true);
+    try {
+      const result = await checkInBooking(booking.booking_id);
+      setBoardingPassUrl(result.location);
+      toast.success('Check-in successful! You can now download your boarding pass.');
+    } catch (error: any) {
+      toast.error(error?.details || error?.error || error?.message || 'Check-in failed');
+      console.error('Check-in error:', error);
+    } finally {
+      setIsCheckingIn(false);
+    }
+  };
+
+  const handleDownload = async () => {
+    if (!boardingPassUrl) return;
+    
+    setIsDownloading(true);
+    try {
+      const blob = await downloadBoardingPass(boardingPassUrl);
+      
+      // Create a download link
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `boarding-pass-${booking.booking_id}.pdf`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+      
+      toast.success('Boarding pass downloaded successfully!');
+    } catch (error: any) {
+      toast.error(error?.details || error?.error || 'Download failed');
+      console.error('Download error:', error);
+    } finally {
+      setIsDownloading(false);
+    }
+  };
+
   const getSeatClassIcon = () => {
     switch (booking.seat_class) {
       case 'business':
@@ -169,18 +216,45 @@ export const BookingCard = ({ booking, flight, onCancel, isCancelling }: Booking
           <span>Booked on {formatDate(booking.booking_time)}</span>
         </div>
 
-        {/* Cancel Button */}
-        {canCancel && (
-          <Button
-            variant="danger"
-            size="sm"
-            onClick={() => onCancel(booking.booking_id)}
-            isLoading={isCancelling}
-            className="w-full"
-          >
-            Cancel Booking
-          </Button>
-        )}
+        {/* Action Buttons */}
+        <div className="space-y-2">
+          {canCancel && !boardingPassUrl && (
+            <Button
+              variant="primary"
+              size="sm"
+              onClick={handleCheckIn}
+              isLoading={isCheckingIn}
+              className="w-full"
+            >
+              Check-in
+            </Button>
+          )}
+          
+          {boardingPassUrl && (
+            <Button
+              variant="primary"
+              size="sm"
+              onClick={handleDownload}
+              isLoading={isDownloading}
+              className="w-full flex items-center justify-center gap-2"
+            >
+              <Download size={16} />
+              Download Boarding Pass
+            </Button>
+          )}
+          
+          {canCancel && (
+            <Button
+              variant="danger"
+              size="sm"
+              onClick={() => onCancel(booking.booking_id)}
+              isLoading={isCancelling}
+              className="w-full"
+            >
+              Cancel Booking
+            </Button>
+          )}
+        </div>
       </Card>
     </motion.div>
   );

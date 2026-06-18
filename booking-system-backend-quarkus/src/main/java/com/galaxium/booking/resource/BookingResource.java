@@ -86,6 +86,7 @@ public class BookingResource {
 
         URI downloadBoardingPass = UriBuilder.fromMethod(BookingResource.class, "boardingpass")
             .build(checkinId);
+
         return Response.created(downloadBoardingPass).build();
 
     }
