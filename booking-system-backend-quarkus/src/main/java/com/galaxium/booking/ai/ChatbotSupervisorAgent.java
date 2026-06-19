@@ -3,6 +3,8 @@ package com.galaxium.booking.ai;
 import dev.langchain4j.agentic.declarative.SupervisorAgent;
 import dev.langchain4j.agentic.supervisor.SupervisorResponseStrategy;
 import dev.langchain4j.service.guardrail.InputGuardrails;
+import jakarta.inject.Inject;
+import org.jboss.logging.Logger;
 
 public interface ChatbotSupervisorAgent {
 
