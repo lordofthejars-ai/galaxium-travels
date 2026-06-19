@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 
 public record BoardingPassData(
     String passengerName,
+    String email,
     String origin,
     String destination,
     String flightId,

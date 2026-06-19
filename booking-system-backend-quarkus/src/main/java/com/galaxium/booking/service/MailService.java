@@ -7,11 +7,15 @@ import io.quarkus.mailer.Mail;
 import io.quarkus.mailer.MailTemplate;
 import io.quarkus.mailer.Mailer;
 import io.quarkus.qute.CheckedTemplate;
+import io.quarkus.qute.TemplateInstance;
+import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import org.jboss.logging.Logger;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.IOException;
 
 @ApplicationScoped
 public class MailService {
@@ -22,23 +26,38 @@ public class MailService {
     @Inject
     Logger logger;
 
-    static File logo = new File("logogalaxy.png");
+    byte[] logo;
+
+    @PostConstruct
+    public void readLogo() throws IOException {
+        logo = MailService.class.getResourceAsStream("/logogalaxy.png").readAllBytes();
+    }
+
+    /**@CheckedTemplate
+    static class Templates {
+        public static native MailTemplate.MailTemplateInstance boardingPass(UserDto userDto, BoardingPassData boardingPassData);
+    }**/
 
     @CheckedTemplate
     static class Templates {
-        public static native MailTemplate.MailTemplateInstance boardingPass(UserDto userDto, BoardingPassData boardingPassData);
+        public static native TemplateInstance boardingPass(UserDto userDto, BoardingPassData boardingPassData);
     }
-
     public void sendEmail(UserDto user, BoardingPassData boardingPassData, byte[] boardingPass) {
-        Templates.boardingPass(user, boardingPassData)
+
+        String body = Templates.boardingPass(user, boardingPassData).render();
+        Mail yourBoardingPassIsReady = Mail.withHtml(user.email, "Your Boarding Pass is Ready", body)
+            .setFrom("galaxy@example.com")
+            .addInlineAttachment("logo.png", logo, "image/png", "<logo@quarkus.io>")
+            .addAttachment("boarding-pass.pdf", boardingPass, "application/pdf");
+        mailer.send(yourBoardingPassIsReady);
+
+        /**Templates.boardingPass(user, boardingPassData)
             .to(user.email)
             .from("galaxy@example.com")
             .subject("Your Boarding Pass is Ready")
-            .addInlineAttachment("logo.png", logo,"image/png", "<logo@quarkus.io>")
+            .addInlineAttachment("logo.png", logo, "image/png", "<logo@quarkus.io>")
             .addAttachment("boarding-pass.pdf", boardingPass, "application/pdf")
-            .send();
-        //mailer.send(Mail.withText("to@acme.org", "A simple email from quarkus", "This is my body.").setFrom("from@acme.org"));
-        System.out.println("Mail 3 sent");
+            .send();**/
 
     }
 

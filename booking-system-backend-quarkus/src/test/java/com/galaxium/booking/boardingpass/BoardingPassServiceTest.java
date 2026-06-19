@@ -24,6 +24,7 @@ public class BoardingPassServiceTest {
         BoardingPassData pass =
             new BoardingPassData(
                 "Captain Nova",
+                "a@example.com",
                 "EARTH",
                 "MARS COLONY",
                 "GT-2085-042",

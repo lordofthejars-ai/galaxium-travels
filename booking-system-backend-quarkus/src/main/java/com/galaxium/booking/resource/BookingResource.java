@@ -70,35 +70,6 @@ public class BookingResource {
 
     }
 
-    @Inject
-    MailService mailService;
-
-    @GET
-    @Path("/email")
-    public void email() {
-        BoardingPassData pass =
-            new BoardingPassData(
-                "Captain Nova",
-                "EARTH",
-                "MARS COLONY",
-                "GT-2085-042",
-                "BK-9XZ73K",
-                "FIRST CLASS",
-                LocalDateTime.of(
-                    2085,
-                    7,
-                    14,
-                    8,
-                    45)
-            );
-
-        UserDto userDto = new UserDto();
-        userDto.name = "Captain Nova";
-        userDto.email ="nova@example.com";
-
-        mailService.sendEmail(userDto, pass, new byte[0]);
-    }
-
     @POST
     @Path("/checkin/{bookingId}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -114,8 +85,8 @@ public class BookingResource {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         LocalDateTime departure = LocalDateTime.parse(flight.departureTime, formatter);
 
-        BoardingPassData boardingPassData = new BoardingPassData(user.name, flight.origin, flight.destination, flightRef, bookingRef, booking.seatClass, departure);
-        String checkinId = boardingPassService.checkin(boardingPassData);
+        BoardingPassData boardingPassData = new BoardingPassData(user.name, user.email, flight.origin, flight.destination, flightRef, bookingRef, booking.seatClass, departure);
+        String checkinId = boardingPassService.checkin(user, boardingPassData);
 
         URI downloadBoardingPass = UriBuilder.fromMethod(BookingResource.class, "boardingpass")
             .build(checkinId);
