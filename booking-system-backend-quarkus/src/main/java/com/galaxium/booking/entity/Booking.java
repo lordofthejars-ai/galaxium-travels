@@ -52,7 +52,7 @@ public class Booking extends PanacheEntity {
      * Uses Hibernate's JSON type support for PostgreSQL.
      */
     @JdbcTypeCode(SqlTypes.JSON)
-    @Column(columnDefinition = "jsonb")
+    @Column(/*columnDefinition = "jsonb"*/)
     public String addons;
 
     /**

@@ -82,7 +82,7 @@ public class BookingResource {
         String flightRef = booking.flightId.toString();
         String bookingRef = bookingId.toString();
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm[:ss]");
         LocalDateTime departure = LocalDateTime.parse(flight.departureTime, formatter);
 
         BoardingPassData boardingPassData = new BoardingPassData(user.name, user.email, flight.origin, flight.destination, flightRef, bookingRef, booking.seatClass, departure);
