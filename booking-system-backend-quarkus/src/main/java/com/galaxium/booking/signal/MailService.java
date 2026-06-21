@@ -1,20 +1,19 @@
-package com.galaxium.booking.service;
+package com.galaxium.booking.signal;
 
 import com.galaxium.booking.boardingpass.BoardingPassData;
 import com.galaxium.booking.dto.UserDto;
-import com.galaxium.booking.entity.User;
 import io.quarkus.mailer.Mail;
-import io.quarkus.mailer.MailTemplate;
 import io.quarkus.mailer.Mailer;
 import io.quarkus.qute.CheckedTemplate;
 import io.quarkus.qute.TemplateInstance;
+import io.quarkus.signals.Receives;
+import io.quarkus.virtual.threads.VirtualThreads;
+import io.smallrye.common.annotation.RunOnVirtualThread;
 import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import org.jboss.logging.Logger;
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.io.IOException;
 
 @ApplicationScoped
@@ -42,7 +41,14 @@ public class MailService {
     static class Templates {
         public static native TemplateInstance boardingPass(UserDto userDto, BoardingPassData boardingPassData);
     }
-    public void sendEmail(UserDto user, BoardingPassData boardingPassData, byte[] boardingPass) {
+
+    @RunOnVirtualThread
+    public void sendEmail(@Receives EmailMessage emailMessage) {
+        logger.info("Boarding Pass Email Preparation");
+
+        UserDto user = emailMessage.userDto();
+        BoardingPassData boardingPassData = emailMessage.boardingPassData();
+        byte[] boardingPass = emailMessage.boardingPass();
 
         String body = Templates.boardingPass(user, boardingPassData).render();
         Mail yourBoardingPassIsReady = Mail.withHtml(user.email, "Your Boarding Pass is Ready", body)
@@ -50,6 +56,8 @@ public class MailService {
             .addInlineAttachment("logo.png", logo, "image/png", "<logo@quarkus.io>")
             .addAttachment("boarding-pass.pdf", boardingPass, "application/pdf");
         mailer.send(yourBoardingPassIsReady);
+
+        logger.info("Boarding Pass Email sent");
 
         /**Templates.boardingPass(user, boardingPassData)
             .to(user.email)

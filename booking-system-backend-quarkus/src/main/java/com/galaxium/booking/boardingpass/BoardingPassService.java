@@ -1,11 +1,21 @@
 package com.galaxium.booking.boardingpass;
 
 import com.galaxium.booking.dto.UserDto;
-import com.galaxium.booking.service.MailService;
+import com.galaxium.booking.signal.EmailMessage;
+import com.galaxium.booking.signal.MailService;
+import io.quarkus.signals.Signal;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import org.jboss.logging.Logger;
 
 @ApplicationScoped
 public class BoardingPassService {
+
+    @Inject
+    Logger logger;
+
+    @Inject
+    Signal<EmailMessage> sendEmail;
 
     private final BoardingPassPdfGenerator boardingPassPdfGenerator;
     private final QRCodeService qrCodeService;
@@ -36,7 +46,10 @@ public class BoardingPassService {
 
         this.boardingPassStorage
             .storeBoardingPass(boardingObjectName, boardingPass);
-        this.mailService.sendEmail(user, pass, boardingPass);
+
+        logger.info("Sending Boarding Pass");
+        sendEmail.send(new EmailMessage(user, pass, boardingPass));
+        //this.mailService.sendEmail(user, pass, boardingPass);
 
         return boardingObjectName;
     }
