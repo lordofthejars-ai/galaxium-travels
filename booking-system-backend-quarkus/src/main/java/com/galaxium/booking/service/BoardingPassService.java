@@ -1,5 +1,9 @@
-package com.galaxium.booking.boardingpass;
+package com.galaxium.booking.service;
 
+import com.galaxium.booking.boardingpass.BoardingPassData;
+import com.galaxium.booking.boardingpass.BoardingPassPdfGenerator;
+import com.galaxium.booking.boardingpass.BoardingPassStorage;
+import com.galaxium.booking.boardingpass.QRCodeService;
 import com.galaxium.booking.dto.UserDto;
 import com.galaxium.booking.signal.EmailMessage;
 import com.galaxium.booking.signal.MailService;

@@ -1,7 +1,7 @@
 package com.galaxium.booking.resource;
 
 import com.galaxium.booking.boardingpass.BoardingPassData;
-import com.galaxium.booking.boardingpass.BoardingPassService;
+import com.galaxium.booking.service.BoardingPassService;
 import com.galaxium.booking.boardingpass.BoardingPassStorage;
 import com.galaxium.booking.dto.BookingDto;
 import com.galaxium.booking.dto.BookingRequest;
