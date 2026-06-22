@@ -11,6 +11,10 @@ import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import org.jboss.logging.Logger;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,6 +30,10 @@ public class DataInitializer {
 
     @Inject
     Logger logger;
+
+    static LocalDateTime localDateTime = LocalDateTime.now();
+    static LocalDate now = LocalDate.now();
+    static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     @Startup
     @Transactional
@@ -84,20 +92,26 @@ public class DataInitializer {
         return users;
     }
 
+    private String createDate(LocalDate date, String time) {
+        LocalTime localTime = LocalTime.parse(time);
+        return formatter.format(LocalDateTime.of(date, localTime));
+    }
+
     private List<Flight> createFlights() {
+
         List<Flight> flights = new ArrayList<>();
 
         Object[][] flightData = {
-            {"Earth", "Mars", "2026-06-01 10:00:00", "2026-06-01 18:00:00", 500},
-            {"Mars", "Earth", "2026-06-02 09:00:00", "2026-06-02 17:00:00", 500},
-            {"Earth", "Moon", "2026-06-03 08:00:00", "2026-06-03 10:00:00", 200},
-            {"Moon", "Earth", "2026-06-04 14:00:00", "2026-06-04 16:00:00", 200},
-            {"Earth", "Venus", "2026-06-05 11:00:00", "2026-06-05 19:00:00", 600},
-            {"Mars", "Jupiter", "2026-06-06 07:00:00", "2026-06-07 15:00:00", 1200},
-            {"Jupiter", "Europa", "2026-06-08 10:00:00", "2026-06-08 12:00:00", 300},
-            {"Europa", "Jupiter", "2026-06-09 13:00:00", "2026-06-09 15:00:00", 300},
-            {"Earth", "Pluto", "2026-06-10 06:00:00", "2026-06-12 18:00:00", 2000},
-            {"Pluto", "Earth", "2026-06-13 08:00:00", "2026-06-15 20:00:00", 2000}
+            {"Earth", "Mars", createDate(now.plusDays(1), "10:00:00"), createDate(now.plusDays(1),"18:00:00"), 500},
+            {"Mars", "Earth", createDate(now.plusDays(2), "09:00:00"), createDate(now.plusDays(2), "17:00:00"), 500},
+            {"Earth", "Moon", createDate(now.plusDays(3), "08:00:00"), createDate(now.plusDays(3), "10:00:00"), 200},
+            {"Moon", "Earth", createDate(now.plusDays(4), "14:00:00"), createDate(now.plusDays(4), "16:00:00"), 200},
+            {"Earth", "Venus", createDate(now.plusDays(5), "11:00:00"), createDate(now.plusDays(5), "19:00:00"), 600},
+            {"Mars", "Jupiter", createDate(now.plusDays(7), "07:00:00"), createDate(now.plusDays(7), "15:00:00"), 1200},
+            {"Jupiter", "Europa", createDate(now.plusDays(8), "10:00:00"), createDate(now.plusDays(8), "12:00:00"), 300},
+            {"Europa", "Jupiter", createDate(now.plusDays(9), "13:00:00"), createDate(now.plusDays(1), "15:00:00"), 300},
+            {"Earth", "Pluto", createDate(now.plusDays(20), "06:00:00"), createDate(now.plusDays(20), "18:00:00"), 2000},
+            {"Pluto", "Earth", createDate(now.plusDays(13), "08:00:00"), createDate(now.plusDays(13), "20:00:00"), 2000}
         };
 
         for (Object[] data : flightData) {
@@ -123,51 +137,51 @@ public class DataInitializer {
 
         // Economy bookings
         bookings.add(createBooking(users.get(0), flights.get(0), BookingStatus.BOOKED, 
-            "2026-05-01 10:00:00", SeatClass.ECONOMY, 500));
-        bookings.add(createBooking(users.get(1), flights.get(1), BookingStatus.BOOKED, 
-            "2026-05-01 11:00:00", SeatClass.ECONOMY, 500));
-        bookings.add(createBooking(users.get(2), flights.get(2), BookingStatus.BOOKED, 
-            "2026-05-01 12:00:00", SeatClass.ECONOMY, 200));
-        bookings.add(createBooking(users.get(3), flights.get(3), BookingStatus.BOOKED, 
-            "2026-05-01 13:00:00", SeatClass.ECONOMY, 200));
-        bookings.add(createBooking(users.get(4), flights.get(4), BookingStatus.BOOKED, 
-            "2026-05-01 14:00:00", SeatClass.ECONOMY, 600));
-        bookings.add(createBooking(users.get(5), flights.get(5), BookingStatus.BOOKED, 
-            "2026-05-01 15:00:00", SeatClass.ECONOMY, 1200));
-        bookings.add(createBooking(users.get(6), flights.get(6), BookingStatus.BOOKED, 
-            "2026-05-01 16:00:00", SeatClass.ECONOMY, 300));
-        bookings.add(createBooking(users.get(7), flights.get(7), BookingStatus.BOOKED, 
-            "2026-05-01 17:00:00", SeatClass.ECONOMY, 300));
+            formatter.format(localDateTime), SeatClass.ECONOMY, 500));
+        bookings.add(createBooking(users.get(1), flights.get(1), BookingStatus.BOOKED,
+            formatter.format(localDateTime), SeatClass.ECONOMY, 500));
+        bookings.add(createBooking(users.get(2), flights.get(2), BookingStatus.BOOKED,
+            formatter.format(localDateTime), SeatClass.ECONOMY, 200));
+        bookings.add(createBooking(users.get(3), flights.get(3), BookingStatus.BOOKED,
+            formatter.format(localDateTime), SeatClass.ECONOMY, 200));
+        bookings.add(createBooking(users.get(4), flights.get(4), BookingStatus.BOOKED,
+            formatter.format(localDateTime), SeatClass.ECONOMY, 600));
+        bookings.add(createBooking(users.get(5), flights.get(5), BookingStatus.BOOKED,
+            formatter.format(localDateTime), SeatClass.ECONOMY, 1200));
+        bookings.add(createBooking(users.get(6), flights.get(6), BookingStatus.BOOKED,
+            formatter.format(localDateTime), SeatClass.ECONOMY, 300));
+        bookings.add(createBooking(users.get(7), flights.get(7), BookingStatus.BOOKED,
+            formatter.format(localDateTime), SeatClass.ECONOMY, 300));
 
         // Business bookings
-        bookings.add(createBooking(users.get(8), flights.get(8), BookingStatus.BOOKED, 
-            "2026-05-02 10:00:00", SeatClass.BUSINESS, 5000));
-        bookings.add(createBooking(users.get(9), flights.get(9), BookingStatus.BOOKED, 
-            "2026-05-02 11:00:00", SeatClass.BUSINESS, 5000));
-        bookings.add(createBooking(users.get(0), flights.get(0), BookingStatus.BOOKED, 
-            "2026-05-02 12:00:00", SeatClass.BUSINESS, 1250));
-        bookings.add(createBooking(users.get(1), flights.get(1), BookingStatus.BOOKED, 
-            "2026-05-02 13:00:00", SeatClass.BUSINESS, 1250));
-        bookings.add(createBooking(users.get(2), flights.get(2), BookingStatus.BOOKED, 
-            "2026-05-02 14:00:00", SeatClass.BUSINESS, 500));
-        bookings.add(createBooking(users.get(3), flights.get(3), BookingStatus.BOOKED, 
-            "2026-05-02 15:00:00", SeatClass.BUSINESS, 500));
+        bookings.add(createBooking(users.get(8), flights.get(8), BookingStatus.BOOKED,
+            formatter.format(localDateTime), SeatClass.BUSINESS, 5000));
+        bookings.add(createBooking(users.get(9), flights.get(9), BookingStatus.BOOKED,
+            formatter.format(localDateTime), SeatClass.BUSINESS, 5000));
+        bookings.add(createBooking(users.get(0), flights.get(0), BookingStatus.BOOKED,
+            formatter.format(localDateTime), SeatClass.BUSINESS, 1250));
+        bookings.add(createBooking(users.get(1), flights.get(1), BookingStatus.BOOKED,
+            formatter.format(localDateTime), SeatClass.BUSINESS, 1250));
+        bookings.add(createBooking(users.get(2), flights.get(2), BookingStatus.BOOKED,
+            formatter.format(localDateTime), SeatClass.BUSINESS, 500));
+        bookings.add(createBooking(users.get(3), flights.get(3), BookingStatus.BOOKED,
+            formatter.format(localDateTime), SeatClass.BUSINESS, 500));
 
         // Galaxium bookings
-        bookings.add(createBooking(users.get(4), flights.get(4), BookingStatus.BOOKED, 
-            "2026-05-03 10:00:00", SeatClass.GALAXIUM, 3000));
-        bookings.add(createBooking(users.get(5), flights.get(5), BookingStatus.BOOKED, 
-            "2026-05-03 11:00:00", SeatClass.GALAXIUM, 6000));
-        bookings.add(createBooking(users.get(6), flights.get(6), BookingStatus.BOOKED, 
-            "2026-05-03 12:00:00", SeatClass.GALAXIUM, 1500));
-        bookings.add(createBooking(users.get(7), flights.get(7), BookingStatus.BOOKED, 
-            "2026-05-03 13:00:00", SeatClass.GALAXIUM, 1500));
+        bookings.add(createBooking(users.get(4), flights.get(4), BookingStatus.BOOKED,
+            formatter.format(localDateTime), SeatClass.GALAXIUM, 3000));
+        bookings.add(createBooking(users.get(5), flights.get(5), BookingStatus.BOOKED,
+            formatter.format(localDateTime), SeatClass.GALAXIUM, 6000));
+        bookings.add(createBooking(users.get(6), flights.get(6), BookingStatus.BOOKED,
+            formatter.format(localDateTime), SeatClass.GALAXIUM, 1500));
+        bookings.add(createBooking(users.get(7), flights.get(7), BookingStatus.BOOKED,
+            formatter.format(localDateTime), SeatClass.GALAXIUM, 1500));
 
         // Cancelled bookings
-        bookings.add(createBooking(users.get(8), flights.get(8), BookingStatus.CANCELLED, 
-            "2026-05-04 10:00:00", SeatClass.ECONOMY, 2000));
-        bookings.add(createBooking(users.get(9), flights.get(9), BookingStatus.CANCELLED, 
-            "2026-05-04 11:00:00", SeatClass.ECONOMY, 2000));
+        bookings.add(createBooking(users.get(8), flights.get(8), BookingStatus.CANCELLED,
+            formatter.format(localDateTime), SeatClass.ECONOMY, 2000));
+        bookings.add(createBooking(users.get(9), flights.get(9), BookingStatus.CANCELLED,
+            formatter.format(localDateTime), SeatClass.ECONOMY, 2000));
 
         return bookings;
     }
