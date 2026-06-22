@@ -64,8 +64,8 @@ public class BookingDto {
     public static BookingDto from(Booking booking) {
         BookingDto dto = new BookingDto();
         dto.bookingId = booking.id;
-        dto.userId = booking.userId;
-        dto.flightId = booking.flightId;
+        dto.userId = booking.user.id;
+        dto.flightId = booking.flight.id;
         dto.status = booking.status.getValue();
         dto.bookingTime = booking.bookingTime;
         dto.seatClass = booking.seatClass.getValue();

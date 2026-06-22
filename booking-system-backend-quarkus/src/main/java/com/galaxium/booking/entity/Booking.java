@@ -18,15 +18,19 @@ import org.hibernate.type.SqlTypes;
 @Table(name = "bookings")
 public class Booking extends PanacheEntity {
 
-    @NotNull(message = "User ID is required")
-    @Min(value = 1, message = "User ID must be positive")
-    @Column(name = "user_id", nullable = false)
-    public Long userId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(
+        name = "user_id",
+        nullable = false
+    )
+    public User user;
 
-    @NotNull(message = "Flight ID is required")
-    @Min(value = 1, message = "Flight ID must be positive")
-    @Column(name = "flight_id", nullable = false)
-    public Long flightId;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(
+        name = "flight_id",
+        nullable = false
+    )
+    public Flight flight;
 
     @NotNull(message = "Status is required")
     @Enumerated(EnumType.STRING)
@@ -59,7 +63,7 @@ public class Booking extends PanacheEntity {
      * Find all bookings for a specific user.
      */
     public static java.util.List<Booking> findByUserId(Long userId) {
-        return find("userId", userId).list();
+        return find("user.id", userId).list();
     }
 
     /**
@@ -80,7 +84,7 @@ public class Booking extends PanacheEntity {
      * Find active (non-cancelled) bookings for a user.
      */
     public static java.util.List<Booking> findActiveByUserId(Long userId) {
-        return find("userId = ?1 AND status != ?2", userId, BookingStatus.CANCELLED).list();
+        return find("user.id = ?1 AND status != ?2", userId, BookingStatus.CANCELLED).list();
     }
 
     /**

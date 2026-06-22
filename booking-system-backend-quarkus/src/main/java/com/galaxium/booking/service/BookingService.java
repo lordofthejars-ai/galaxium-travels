@@ -168,8 +168,8 @@ public class BookingService {
 
         // Create booking
         Booking booking = new Booking();
-        booking.userId = userId;
-        booking.flightId = flightId;
+        booking.user = user;
+        booking.flight = flight;
         booking.status = BookingStatus.BOOKED;
         booking.bookingTime = Instant.now().toString();
         booking.seatClass = seatClassEnum;
@@ -206,7 +206,7 @@ public class BookingService {
         }
 
         // Restore seat to the correct class
-        Flight flight = Flight.findById(booking.flightId);
+        Flight flight = booking.flight;
         if (flight != null) {
             flight.incrementSeats(booking.seatClass);
         }
