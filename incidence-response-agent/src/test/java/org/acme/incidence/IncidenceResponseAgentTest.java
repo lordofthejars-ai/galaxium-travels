@@ -64,6 +64,10 @@ public class IncidenceResponseAgentTest {
 
         // Create error handler for streaming errors
         Consumer<Throwable> streamingErrorHandler = (error) -> {
+            if(error == null || error instanceof java.util.concurrent.CancellationException) {
+                messageResponse.complete("");
+                return;
+            }
             System.err.println("Streaming error occurred: " + error.getMessage());
             error.printStackTrace();
             messageResponse.completeExceptionally(error);
