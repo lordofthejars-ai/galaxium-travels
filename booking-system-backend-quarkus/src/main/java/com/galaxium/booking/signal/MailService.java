@@ -7,16 +7,15 @@ import io.quarkus.mailer.Mailer;
 import io.quarkus.qute.CheckedTemplate;
 import io.quarkus.qute.TemplateInstance;
 import io.quarkus.signals.Receives;
-import io.quarkus.virtual.threads.VirtualThreads;
 import io.smallrye.common.annotation.RunOnVirtualThread;
 import jakarta.annotation.PostConstruct;
-import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import org.jboss.logging.Logger;
 
 import java.io.IOException;
 
-@ApplicationScoped
+@Singleton
 public class MailService {
 
     @Inject
