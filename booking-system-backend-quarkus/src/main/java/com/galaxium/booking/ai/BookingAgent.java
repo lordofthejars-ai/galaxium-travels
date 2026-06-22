@@ -5,6 +5,7 @@ import com.galaxium.booking.service.FlightSearchTool;
 import dev.langchain4j.agentic.Agent;
 import dev.langchain4j.service.SystemMessage;
 import dev.langchain4j.service.UserMessage;
+import dev.langchain4j.service.guardrail.InputGuardrails;
 import io.quarkiverse.langchain4j.ToolBox;
 
 public interface BookingAgent {
@@ -21,6 +22,7 @@ public interface BookingAgent {
         """)
     @Agent(description = "You are a helpful assistant for Galaxium Travels, a space travel booking system tp get information about bookings",
         outputKey = "answer")
+    @InputGuardrails(BookingQuestionsInputGuardrail.class)
     @ToolBox({BookingSearchTool.class, FlightSearchTool.class})
     String chat(@UserMessage String userMessage);
 }
