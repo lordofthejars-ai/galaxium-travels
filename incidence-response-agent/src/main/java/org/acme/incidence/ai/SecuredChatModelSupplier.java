@@ -15,10 +15,13 @@ public class SecuredChatModelSupplier implements Supplier<ChatModel> {
     @Inject
     Logger logger;
 
+    @ConfigProperty(name = "key")
+    String apiKey;
+
     @Override
     public ChatModel get() {
 
-        logger.info("Getting chat model");
+        logger.infof("Getting chat model with '%s' key", apiKey);
 
         ChatModel model = OpenAiChatModel.builder()
                 .apiKey("demo")

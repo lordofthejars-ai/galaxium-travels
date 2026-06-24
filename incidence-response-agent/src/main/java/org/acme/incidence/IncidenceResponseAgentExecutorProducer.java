@@ -38,10 +38,10 @@ public class IncidenceResponseAgentExecutorProducer {
         @Override
         public void execute(RequestContext context, AgentEmitter agentEmitter) throws A2AError {
 
-            /**if (context.getTask() == null) {
+            if (context.getTask() == null) {
                 agentEmitter.submit();
             }
-            agentEmitter.startWork();**/
+            agentEmitter.startWork();
 
             // extract the text from the message
             String userMessage = extractTextFromMessage(context.getMessage());
@@ -52,10 +52,10 @@ public class IncidenceResponseAgentExecutorProducer {
             // create the response part
             TextPart responsePart = new TextPart(response);
             List<Part<?>> parts = List.of(responsePart);
-            agentEmitter.sendMessage(parts);
+            //agentEmitter.sendMessage(parts);
 
-            /**agentEmitter.addArtifact(parts);
-            agentEmitter.complete();*/
+            agentEmitter.addArtifact(parts);
+            agentEmitter.complete();
         }
 
         /**
