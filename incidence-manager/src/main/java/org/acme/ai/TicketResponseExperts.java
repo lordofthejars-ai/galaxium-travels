@@ -15,7 +15,7 @@ public class TicketResponseExperts {
 
         @SequenceAgent(
             outputKey = "response",
-            subAgents = { SentimentAnalyzer.class, TicketResponseExpertsAgent.class })
+            subAgents = { SentimentAnalyzer.class, NoAgent.class })
         ResultWithAgenticScope<String> ask(String request);
     }
 
@@ -50,7 +50,7 @@ public class TicketResponseExperts {
     public class NoAgent {
         @Agent(description = "Agent that does nothing", outputKey = "response")
         public static String no(String request) {
-            return "";
+            return "Message";
         }
     }
 

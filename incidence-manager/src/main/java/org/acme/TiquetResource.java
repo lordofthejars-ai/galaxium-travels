@@ -1,5 +1,6 @@
 package org.acme;
 
+import dev.langchain4j.agentic.scope.ResultWithAgenticScope;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
@@ -8,7 +9,10 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import org.acme.ai.TicketResponseExperts;
 import org.acme.docling.BoardingPassScanner;
 
 @Path("/tiquet")
@@ -41,11 +45,18 @@ public class TiquetResource {
         String message)
     {}
 
+    @Inject
+    TicketResponseExperts.ExpertTicketResponseAgent expertTicketResponseAgent;
+
     @POST
     @Path("/store")
+    @Produces(MediaType.TEXT_PLAIN)
     public Response createSupportTicket(@Valid TiquetRequest tiquetRequest) {
+        ResultWithAgenticScope<String> response = expertTicketResponseAgent.ask(tiquetRequest.message());
 
-        return Response.noContent().build();
+        System.out.println(response.agenticScope().readState("sentiment"));
+
+        return Response.ok(response.result()).build();
 
     }
 }
