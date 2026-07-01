@@ -46,7 +46,6 @@ public class IncidenceResponseAgentExecutorProducer {
             // extract the text from the message
             String userMessage = extractTextFromMessage(context.getMessage());
 
-            // call the weather agent with the user's message
             String response = "Hello";
 
             // create the response part
