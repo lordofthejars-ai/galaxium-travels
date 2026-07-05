@@ -1,4 +1,4 @@
-package org.acme.ai;
+package org.acme;
 
 public enum Sentiment {
 

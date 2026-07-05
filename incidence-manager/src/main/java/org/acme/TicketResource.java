@@ -1,9 +1,11 @@
 package org.acme;
 
 import io.serverlessworkflow.impl.WorkflowInstance;
+import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
+import jakarta.ws.rs.GET;
 import jakarta.ws.rs.HeaderParam;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.PUT;
@@ -12,10 +14,15 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.acme.docling.BoardingPassScanner;
+import org.acme.entity.Incidence;
 import org.eclipse.microprofile.reactive.messaging.Channel;
 import org.eclipse.microprofile.reactive.messaging.Emitter;
 
 import java.net.URI;
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.Period;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -25,9 +32,13 @@ import io.cloudevents.CloudEvent;
 import io.cloudevents.core.builder.CloudEventBuilder;
 import io.cloudevents.core.provider.EventFormatProvider;
 import io.cloudevents.jackson.JsonFormat;
+import org.eclipse.microprofile.reactive.messaging.Incoming;
+import org.jboss.logging.Logger;
+import org.jboss.resteasy.reactive.RestStreamElementType;
+import org.jspecify.annotations.NonNull;
 
-@Path("/tiquet")
-public class TiquetResource {
+@Path("/ticket")
+public class TicketResource {
 
     @Inject
     BoardingPassScanner boardingPassScanner;
@@ -48,19 +59,33 @@ public class TiquetResource {
     @POST
     @Path("/storetest")
     @Produces(MediaType.TEXT_PLAIN)
-    public Uni<TiquetResponse> createSupportTicket(@Valid TiquetRequest tiquetRequest) {
+    public Uni<TicketResponse> createSupportTicket(@Valid TicketRequest ticketRequest) {
 
-        return ticketResponseWorkflow.startInstance(tiquetRequest.message())
+        Map<String, Object> params = createParameters(ticketRequest);
+
+        return ticketResponseWorkflow.startInstance(params)
             .onItem()
-            .transform(data -> data.as(TiquetResponse.class)
+            .transform(data -> data.as(TicketResponse.class)
                 .orElseThrow());
 
     }
 
+    private static @NonNull Map<String, Object> createParameters(TicketRequest ticketRequest) {
+        Map<String, Object> params =
+            Map.of("request", ticketRequest.message(),
+                   "user", ticketRequest.user(),
+                   "email", ticketRequest.email(),
+                   "message", ticketRequest.message(),
+                   "bookingId", ticketRequest.bookingId());
+
+        return params;
+    }
+
     @POST
     @Path("/store")
-    public Response supportTicketProcessing(@Valid TiquetRequest tiquetRequest) {
-        WorkflowInstance instance = ticketResponseWorkflow.instance(tiquetRequest);
+    public Response supportTicketProcessing(@Valid TicketRequest ticketRequest) {
+        Map<String, Object> params = createParameters(ticketRequest);
+        WorkflowInstance instance = ticketResponseWorkflow.instance(params);
         // fire and forget (agents will be called on a thread within the engine)
         instance.start();
 
@@ -78,20 +103,52 @@ public class TiquetResource {
     @Inject
     ObjectMapper objectMapper;
 
+    @Inject
+    Logger logger;
+
     @PUT
     @Path("/update")
-    public Response sendReview(TiquetResponse review, @HeaderParam("X-Flow-Instance-Id") String instanceId)
+    public Response sendReview(ReviewedDraft review, @HeaderParam("X-Flow-Instance-Id") String instanceId)
         throws JsonProcessingException {
+
+        logger.infof("Received %s review", review.draft());
+
         byte[] body = objectMapper.writeValueAsBytes(review);
 
         CloudEvent ce = CloudEventBuilder.v1().withId(UUID.randomUUID().toString())
             .withExtension("flowinstanceid", instanceId)
-            .withSource(URI.create("api:/update")).withType("org.acme.newsletter.review.done")
+            .withSource(URI.create("api:/update")).withType("org.acme.email.review.done")
             .withDataContentType("application/json").withData(body).build();
 
         byte[] ceBytes = CE_JSON.serialize(ce);
         flowIn.send(ceBytes);
 
         return Response.accepted().build();
+    }
+
+    @Channel("flow-out-incoming")
+    Multi<byte[]> flowOut;
+
+    @Inject
+    ReviewFeedbackOutbridge reviewFeedbackOutbridge;
+
+    @GET
+    @Path("/hil")
+    @RestStreamElementType(MediaType.APPLICATION_JSON)
+    public Multi<String> stream() {
+        return flowOut
+            .map(reviewFeedbackOutbridge::onFlowOut);
+    }
+
+    @Inject
+    Incidence.Repo incidenceRepo;
+
+    // dashboard
+    @GET
+    @Path("/recent")
+    public List<Incidence> findRecentCustomerSupport() {
+        LocalDate daysBefore = LocalDate.now()
+            .minus(Period.ofDays(60));
+        return incidenceRepo.findByDate(daysBefore);
     }
 }

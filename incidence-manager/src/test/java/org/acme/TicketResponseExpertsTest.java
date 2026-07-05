@@ -1,7 +1,6 @@
 package org.acme;
 
 
-import dev.langchain4j.agentic.scope.ResultWithAgenticScope;
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
 import org.acme.ai.TicketResponseExperts;
@@ -31,7 +30,7 @@ public class TicketResponseExpertsTest {
 
     @Test
     public void shouldAutoDraftAFeedback() {
-        TiquetResponse result = autoDraftFeedbackAgent.generateFeedback("1", "My seat was broken during the flight.");
+        TicketResponse result = autoDraftFeedbackAgent.generateFeedback("1", "My seat was broken during the flight.");
 
         System.out.println(result);
     }

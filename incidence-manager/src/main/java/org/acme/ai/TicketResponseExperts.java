@@ -6,12 +6,11 @@ import dev.langchain4j.agentic.declarative.A2AClientAgent;
 import dev.langchain4j.agentic.declarative.Output;
 import dev.langchain4j.agentic.declarative.ParallelAgent;
 import dev.langchain4j.agentic.declarative.SequenceAgent;
-import dev.langchain4j.agentic.scope.ResultWithAgenticScope;
 import dev.langchain4j.service.MemoryId;
 import dev.langchain4j.service.SystemMessage;
 import dev.langchain4j.service.UserMessage;
 import io.quarkiverse.langchain4j.RegisterAiService;
-import org.acme.TiquetResponse;
+import org.acme.TicketResponse;
 
 
 public class TicketResponseExperts {
@@ -21,12 +20,11 @@ public class TicketResponseExperts {
         @ParallelAgent(
             outputKey = "final",
             subAgents = { ReviewSentimentAgent.class, GenerateFeedbackAgent.class })
-        TiquetResponse generateFeedback(@MemoryId String memoryId, String request);
+        TicketResponse generateFeedback(@MemoryId String memoryId, String request);
 
         @Output
-        static TiquetResponse createResponse(SentimentAnalysis sentiment, String response) {
-            System.out.println("+++ " + sentiment);
-            return new TiquetResponse(response, sentiment);
+        static TicketResponse createResponse(SentimentAnalysis sentiment, String response) {
+            return new TicketResponse(response, sentiment);
         }
 
     }
@@ -125,7 +123,7 @@ public class TicketResponseExperts {
             """)
         @UserMessage("""
             The feedback from user is: {request}
-                        """)
+        """)
         SentimentAnalysis classify(String request);
     }
 }
