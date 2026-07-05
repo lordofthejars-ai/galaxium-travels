@@ -46,12 +46,13 @@ public class IncidenceResponseAgentExecutorProducer {
             // extract the text from the message
             String userMessage = extractTextFromMessage(context.getMessage());
 
-            String response = "Hello";
+            logger.infof("Received the following user message %s", userMessage);
+
+            String response = incidenceResponseService.generate(userMessage);
 
             // create the response part
             TextPart responsePart = new TextPart(response);
             List<Part<?>> parts = List.of(responsePart);
-            //agentEmitter.sendMessage(parts);
 
             agentEmitter.addArtifact(parts);
             agentEmitter.complete();
