@@ -1,5 +1,6 @@
 package org.acme.incidence;
 
+import io.micrometer.core.instrument.MeterRegistry;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.inject.Produces;
 import jakarta.inject.Inject;
@@ -21,22 +22,31 @@ public class IncidenceResponseAgentExecutorProducer {
     @Inject
     Logger logger;
 
+    @Inject
+    MeterRegistry registry;
+
     @Produces
     public AgentExecutor agentExecutor() {
-        return new IncidenceResponseAgentExecutor(incidenceResponseService, logger);
+        return new IncidenceResponseAgentExecutor(incidenceResponseService, logger, registry);
     }
 
     private static class IncidenceResponseAgentExecutor implements AgentExecutor {
         private final IncidenceResponseService incidenceResponseService;
         private final Logger logger;
+        private final MeterRegistry registry;
 
-        private IncidenceResponseAgentExecutor(IncidenceResponseService incidenceResponseService, Logger logger) {
+        private IncidenceResponseAgentExecutor(IncidenceResponseService incidenceResponseService,
+                                               Logger logger,
+                                               MeterRegistry registry) {
             this.incidenceResponseService = incidenceResponseService;
             this.logger = logger;
+            this.registry = registry;
         }
 
         @Override
         public void execute(RequestContext context, AgentEmitter agentEmitter) throws A2AError {
+
+            registry.counter("agent.process.total").increment();
 
             if (context.getTask() == null) {
                 agentEmitter.submit();

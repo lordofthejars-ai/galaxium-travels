@@ -59,12 +59,12 @@
         <dependency>
             <groupId>io.quarkiverse.flow</groupId>
             <artifactId>quarkus-flow</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
+            <version>0.12.0</version>
         </dependency>
         <dependency>
             <groupId>io.quarkiverse.flow</groupId>
             <artifactId>quarkus-flow-langchain4j</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
+            <version>0.12.0</version>
         </dependency>
         <dependency>
             <groupId>io.quarkiverse.quinoa</groupId>

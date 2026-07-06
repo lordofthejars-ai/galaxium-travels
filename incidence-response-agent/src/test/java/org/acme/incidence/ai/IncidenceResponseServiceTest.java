@@ -13,7 +13,7 @@ public class IncidenceResponseServiceTest {
     @Test
     public void shouldCreateAResponse() {
         String response = incidenceResponseService.generate("""
-                Thank you very much for your trip, the experience of the trip to Mars was amazing. 
+                Thank you very much for the trip, the experience of the trip to Mars was amazing. 
                 """);
         System.out.println(response);
     }

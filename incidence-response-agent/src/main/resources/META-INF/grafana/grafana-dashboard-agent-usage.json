@@ -1,0 +1,38 @@
+{
+  "title": "Visits Dashboard",
+  "tags": [
+    "Quarkus",
+    "Micrometer",
+    "Observability-as-Code"
+  ],
+  "panels": [
+    {
+      "type": "stat",
+      "title": "Agent Process Total",
+      "targets": [
+        {
+          "expr": "agent_process_total"
+        }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "Agent Process Over Time",
+      "targets": [
+        {
+          "expr": "rate(agent_process_total[1m])"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "count/s",
+          "color": {
+            "mode": "palette-classic"
+          }
+        }
+      }
+    }
+  ],
+  "schemaVersion": 41,
+  "version": 1
+}
