@@ -8,7 +8,7 @@ import org.jboss.logging.Logger;
 
 public interface ChatbotSupervisorAgent {
 
-    @InputGuardrails(BookingQuestionsInputGuardrail.class)
+    //@InputGuardrails(BookingQuestionsInputGuardrail.class)
     @SupervisorAgent(
         responseStrategy = SupervisorResponseStrategy.SUMMARY,
         subAgents = { BookingAgent.class, TimeAgent.class})

@@ -32,7 +32,7 @@ public class PlanetaryMcpServer {
             String planet
         ) {
 
-        logger.infof("");
+        logger.infof("Time converted to %s planet", planet);
 
         return converter.convert(
             Instant.parse(instant),
