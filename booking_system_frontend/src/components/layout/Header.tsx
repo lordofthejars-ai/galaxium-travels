@@ -1,15 +1,17 @@
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Rocket, User, LogOut } from 'lucide-react';
+import { Rocket, User, LogOut, Headphones } from 'lucide-react';
 import { useUser } from '../../hooks/useUser';
 import { Button } from '../common';
 import { UserIdentification } from '../user/UserIdentification';
+import { CustomerSupportWizard } from '../common/CustomerSupportWizard';
 import { motion } from 'framer-motion';
 
 export const Header = () => {
   const location = useLocation();
   const { user, logout } = useUser();
   const [showUserModal, setShowUserModal] = useState(false);
+  const [showSupportWizard, setShowSupportWizard] = useState(false);
 
   const isActive = (path: string) => location.pathname === path;
 
@@ -64,6 +66,15 @@ export const Header = () => {
               >
                 My Bookings
               </Link>
+            )}
+            {user && (
+              <button
+                onClick={() => setShowSupportWizard(true)}
+                className="flex items-center gap-1.5 text-sm font-medium text-star-white/70 hover:text-star-white transition-colors"
+              >
+                <Headphones size={15} />
+                Customer Support
+              </button>
             )}
           </nav>
 
@@ -138,6 +149,15 @@ export const Header = () => {
               My Bookings
             </Link>
           )}
+          {user && (
+            <button
+              onClick={() => setShowSupportWizard(true)}
+              className="flex items-center gap-1.5 text-sm font-medium text-star-white/70 hover:text-star-white transition-colors"
+            >
+              <Headphones size={15} />
+              Support
+            </button>
+          )}
         </nav>
       </div>
     </header>
@@ -149,6 +169,12 @@ export const Header = () => {
       onSuccess={() => {
         setShowUserModal(false);
       }}
+    />
+
+    {/* Customer Support Wizard */}
+    <CustomerSupportWizard
+      isOpen={showSupportWizard}
+      onClose={() => setShowSupportWizard(false)}
     />
     </>
   );
