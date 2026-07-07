@@ -1,0 +1,3 @@
+Can you give me a list of my bookings?
+
+Can you provide me the local time at arrival for my booking number 11?
