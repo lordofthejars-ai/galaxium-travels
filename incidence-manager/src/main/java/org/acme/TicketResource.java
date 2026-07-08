@@ -15,6 +15,7 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.acme.docling.BoardingPassScanner;
 import org.acme.entity.Incidence;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.reactive.messaging.Channel;
 import org.eclipse.microprofile.reactive.messaging.Emitter;
 
@@ -43,14 +44,26 @@ public class TicketResource {
     @Inject
     BoardingPassScanner boardingPassScanner;
 
+    @Inject
+    Logger logger;
+
+    @ConfigProperty(name = "docling.enbaled", defaultValue = "false")
+    boolean doclingEnabled;
+
     public record ScanResponse(Long id, boolean valid){}
 
     @POST
     @Path("/scan")
     public ScanResponse scan(String boardingPassBase64) {
 
-        long id = boardingPassScanner.scanBookingId(boardingPassBase64);
-        return new ScanResponse(id,  id > 0 ?  true : false);
+        logger.infof("Scanning Boarding pass");
+
+        if (doclingEnabled) {
+            long id = boardingPassScanner.scanBookingId(boardingPassBase64);
+            return new ScanResponse(id, id > 0 ? true : false);
+        } else {
+            return new ScanResponse(11L, 11 > 0 ? true : false);
+        }
     }
 
     @Inject
@@ -84,6 +97,9 @@ public class TicketResource {
     @POST
     @Path("/store")
     public Response supportTicketProcessing(@Valid TicketRequest ticketRequest) {
+
+        logger.infof("Starting Support Ticket Workflow with Message: %s", ticketRequest.message());
+
         Map<String, Object> params = createParameters(ticketRequest);
         WorkflowInstance instance = ticketResponseWorkflow.instance(params);
         // fire and forget (agents will be called on a thread within the engine)
@@ -103,8 +119,6 @@ public class TicketResource {
     @Inject
     ObjectMapper objectMapper;
 
-    @Inject
-    Logger logger;
 
     @PUT
     @Path("/update")

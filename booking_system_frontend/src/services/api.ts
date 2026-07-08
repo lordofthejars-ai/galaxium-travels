@@ -286,4 +286,35 @@ export const sendChatMessage = async (
 
 export default api;
 
+// ==================== Ticket / Customer Support Endpoints ====================
+
+export interface TicketScanResponse {
+  user: string;
+  email: string;
+  bookingId: string;
+}
+
+/**
+ * Submit a file (as base64) to the ticket scan endpoint.
+ * The server parses the document and returns user/booking details.
+ */
+export const scanTicket = async (fileBase64: string): Promise<TicketScanResponse> => {
+  const response = await api.post<TicketScanResponse>('/ticket/scan', { file: fileBase64 });
+  return response.data;
+};
+
+export interface TicketStoreRequest {
+  user: string;
+  email: string;
+  bookingId: string;
+  message: string;
+}
+
+/**
+ * Persist the customer-support ticket with the user's message.
+ */
+export const storeTicket = async (data: TicketStoreRequest): Promise<void> => {
+  await api.post('/ticket/store', data);
+};
+
 // Made with Bob

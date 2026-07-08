@@ -100,6 +100,10 @@ public class UserService {
 
         return Result.success(UserDto.from(user));
     }
+
+    public UserDto findUserById(Long id) {
+        return UserDto.from(User.findById(id));
+    }
 }
 
 // Made with Bob
