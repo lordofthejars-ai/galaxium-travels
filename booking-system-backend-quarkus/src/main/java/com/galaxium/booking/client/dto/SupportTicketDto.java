@@ -1,4 +1,4 @@
 package com.galaxium.booking.client.dto;
 
-public record SupportTicketDto(String user, String userEmail, Long bookingId, String message) {
+public record SupportTicketDto(String user, String email, Long bookingId, String message) {
 }

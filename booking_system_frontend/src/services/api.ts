@@ -290,7 +290,7 @@ export default api;
 
 export interface TicketScanResponse {
   user: string;
-  userEmail: string;
+  email: string;
   bookingId: string;
 }
 
@@ -305,7 +305,7 @@ export const scanTicket = async (fileBase64: string): Promise<TicketScanResponse
 
 export interface TicketStoreRequest {
   user: string;
-  userEmail: string;
+  email: string;
   bookingId: string;
   message: string;
 }

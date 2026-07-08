@@ -1,4 +1,4 @@
 package com.galaxium.booking.client.dto;
 
-public record ScanBoardingPassDto(String user, String userEmail, Long bookingId) {
+public record ScanBoardingPassDto(String user, String email, Long bookingId) {
 }

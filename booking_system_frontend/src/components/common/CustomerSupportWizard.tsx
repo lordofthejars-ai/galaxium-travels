@@ -99,7 +99,7 @@ export const CustomerSupportWizard = ({ isOpen, onClose }: CustomerSupportWizard
     try {
       await storeTicket({
         user: scanResult.user,
-        userEmail: scanResult.userEmail,
+        email: scanResult.email,
         bookingId: scanResult.bookingId,
         message: message.trim(),
       });
@@ -242,7 +242,7 @@ export const CustomerSupportWizard = ({ isOpen, onClose }: CustomerSupportWizard
               <div className="glass-card p-4 mb-5 text-sm space-y-1">
                 <p className="text-star-white/50 text-xs uppercase tracking-wider mb-2">Detected details</p>
                 <p><span className="text-star-white/50">Name:</span> <span className="text-star-white">{scanResult.user}</span></p>
-                <p><span className="text-star-white/50">Email:</span> <span className="text-star-white">{scanResult.userEmail}</span></p>
+                <p><span className="text-star-white/50">Email:</span> <span className="text-star-white">{scanResult.email}</span></p>
                 <p><span className="text-star-white/50">Booking ID:</span> <span className="text-cosmic-purple font-mono">{scanResult.bookingId}</span></p>
               </div>
             )}
@@ -298,7 +298,7 @@ export const CustomerSupportWizard = ({ isOpen, onClose }: CustomerSupportWizard
             </h3>
             <p className="text-star-white/60 max-w-sm leading-relaxed">
               Your ticket has been received. Our crew will review your request and get back to you at{' '}
-              <span className="text-star-white">{scanResult?.userEmail}</span> as soon as possible.
+              <span className="text-star-white">{scanResult?.email}</span> as soon as possible.
             </p>
 
             <div className="mt-8">
