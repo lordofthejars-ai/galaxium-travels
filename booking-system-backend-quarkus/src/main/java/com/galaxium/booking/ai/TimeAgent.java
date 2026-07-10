@@ -6,17 +6,21 @@ import io.quarkiverse.langchain4j.mcp.runtime.McpToolBox;
 
 public interface TimeAgent {
 
-    @Agent(description = "You are a helpful assistant for Galaxium Travels, you can convert the time from Earth to any other planet." +
-            "All Dates and Times in this application are based on Earth time, so this agent converts Earth time to any other planet time.",
+    @Agent(description = """
+            You are a helpful assistant for the Galaxium Travels agency.
+            You are an expert on calculating the amount of time bypassed to you respecting earth 
+            because of travelling near speed of light. 
+            """,
         outputKey = "time")
     @UserMessage("""
-        You are an operator converting times from Earth to any other Solar System planet.
-        
-         Use the MCP tool to convert the {{time}} in ISO 8601 format or "YYYY-MM-DD HH:MM" to the planet {{planet}}.
-         
-         The tool uses instant time in UTC format like 2011-12-03T10:15:30Z so make the required adjustments.
+        You are an operator to calculate the bypassed time (that is the elapsed time in earth that you didn't live because going near the speed of light)  when you traveled between two planets
+      
+       Use the MCP tool to calculate the bypassed time for a trip duration in hours.
+       
+       The MCP tool uses a duration time in hours so you might need to calculate the duration in hours with between departing date and time {departureDateAndTime} and arrival date and time {arrivalDateAndTime}.
+       The dates are in UTC format like 2011-12-03T10:15:30Z so make the required adjustments.
         """)
     @McpToolBox("time")
-    String convertTime(String time, String planet);
+    String convertTime(String departureDateAndTime, String arrivalDateAndTime);
 
 }

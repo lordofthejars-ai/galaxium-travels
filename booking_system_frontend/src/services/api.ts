@@ -8,6 +8,7 @@ import type {
   ErrorResponse,
   Quote,
   Hold,
+  PlanetInfo,
 } from '../types';
 import { ADDONS_CATALOG } from '../data/addOns';
 
@@ -265,6 +266,16 @@ export const isErrorResponse = (
  */
 export const healthCheck = async (): Promise<{ status: string }> => {
   const response = await api.get<{ status: string }>('/');
+  return response.data;
+};
+
+// ==================== Planet Endpoints ====================
+
+/**
+ * Get information about a planet by name
+ */
+export const getPlanetInfo = async (planetName: string): Promise<PlanetInfo> => {
+  const response = await api.get<PlanetInfo>(`/planet/info/${encodeURIComponent(planetName)}`);
   return response.data;
 };
 

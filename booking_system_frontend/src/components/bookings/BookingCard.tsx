@@ -6,6 +6,7 @@ import { formatDate, formatCurrency } from '../../utils/formatters';
 import { motion } from 'framer-motion';
 import { checkInBooking, downloadBoardingPass } from '../../services/api';
 import toast from 'react-hot-toast';
+import { PlanetInfoModal } from './PlanetInfoModal';
 
 interface BookingCardProps {
   booking: Booking;
@@ -18,6 +19,7 @@ export const BookingCard = ({ booking, flight, onCancel, isCancelling }: Booking
   const [isCheckingIn, setIsCheckingIn] = useState(false);
   const [boardingPassUrl, setBoardingPassUrl] = useState<string | null>(null);
   const [isDownloading, setIsDownloading] = useState(false);
+  const [selectedPlanet, setSelectedPlanet] = useState<string | null>(null);
 
   const handleCheckIn = async () => {
     setIsCheckingIn(true);
@@ -145,12 +147,25 @@ export const BookingCard = ({ booking, flight, onCancel, isCancelling }: Booking
           </div>
         </div>
 
+        {/* Planet info modal */}
+        <PlanetInfoModal
+          planetName={selectedPlanet}
+          onClose={() => setSelectedPlanet(null)}
+        />
+
         {/* Flight Details */}
         {flight ? (
           <div className="space-y-3 mb-4">
             <div>
               <h3 className="text-xl font-bold text-star-white mb-1">
-                {flight.origin} → {flight.destination}
+                {flight.origin} →{' '}
+                <button
+                  onClick={() => setSelectedPlanet(flight.destination)}
+                  className="hover:text-cosmic-purple underline decoration-dotted underline-offset-2 transition-colors"
+                  title={`View info about ${flight.destination}`}
+                >
+                  {flight.destination}
+                </button>
               </h3>
               <p className="text-sm text-star-white/60">Flight #{flight.flight_id}</p>
             </div>

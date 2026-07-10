@@ -122,4 +122,12 @@ export interface StoredHold {
   reservedUntil: string;
 }
 
+// Planet info returned by GET /planet/info/<planetname>
+export interface PlanetInfo {
+  orbitalPeriod: number;
+  rotationPeriod: number;
+  averageSurfaceTemperature: number;
+  interestingFacts: string[];
+}
+
 // Made with Bob
