@@ -37,7 +37,10 @@ public class BookingDto {
     
     @JsonProperty("price_paid")
     public Integer pricePaid;
-    
+
+    @JsonProperty("departure_date")
+    public String departureDate;
+
     public JsonNode addons;  // JSON string
 
     public BookingDto() {
@@ -70,6 +73,7 @@ public class BookingDto {
         dto.bookingTime = booking.bookingTime;
         dto.seatClass = booking.seatClass.getValue();
         dto.pricePaid = booking.pricePaid;
+        dto.departureDate = booking.flight.departureTime;
 
         if (booking.addons != null) {
             try {

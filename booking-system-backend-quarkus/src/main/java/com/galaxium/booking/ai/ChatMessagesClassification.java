@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 public class ChatMessagesClassification {
 
     static List<String> keywordsToFind = Arrays.
-        asList("bookings", "flights", "destination", "time", "user", "booking", "detail");
+        asList("bookings", "flights", "destination", "time", "user", "booking", "detail", "cancel");
 
     public boolean validConversation(String text) {
         return containsAnyKeyword(text, keywordsToFind);

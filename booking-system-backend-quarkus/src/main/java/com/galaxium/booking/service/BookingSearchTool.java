@@ -2,6 +2,7 @@ package com.galaxium.booking.service;
 
 import com.galaxium.booking.dto.BookingDto;
 import com.galaxium.booking.dto.FlightDto;
+import com.galaxium.booking.dto.Result;
 import dev.langchain4j.agent.tool.Tool;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -38,6 +39,14 @@ public class BookingSearchTool {
     public List<BookingDto> findBookingsByUserId(Long userId) {
         logger.infof("Tool invoked for searching bookings for the user " + userId);
         return bookingService.getBookings(userId);
+    }
+
+    @Tool("Cancel a booking for the given booking id. Returns true if suceeded, false otherwise.")
+    public boolean cancelBooking(Long bookingId) {
+        logger.infof("Cancelling bookind Id %s", bookingId);
+        Result<BookingDto> bookingDtoResult = bookingService.cancelBooking(bookingId);
+
+        return bookingDtoResult.isSuccess();
     }
 
 }

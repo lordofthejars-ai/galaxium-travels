@@ -138,6 +138,8 @@ public class DataInitializer {
         // Economy bookings
         bookings.add(createBooking(users.get(0), flights.get(0), BookingStatus.BOOKED, 
             formatter.format(localDateTime), SeatClass.ECONOMY, 500));
+        bookings.add(createBooking(users.get(0), flights.get(9), BookingStatus.BOOKED,
+            formatter.format(localDateTime), SeatClass.ECONOMY, 500));
         bookings.add(createBooking(users.get(1), flights.get(1), BookingStatus.BOOKED,
             formatter.format(localDateTime), SeatClass.ECONOMY, 500));
         bookings.add(createBooking(users.get(2), flights.get(2), BookingStatus.BOOKED,
