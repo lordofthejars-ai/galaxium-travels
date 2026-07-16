@@ -110,8 +110,8 @@ public class DataInitializer {
             {"Mars", "Jupiter", createDate(now.plusDays(7), "07:00:00"), createDate(now.plusDays(7), "15:00:00"), 1200},
             {"Jupiter", "Europa", createDate(now.plusDays(8), "10:00:00"), createDate(now.plusDays(8), "12:00:00"), 300},
             {"Europa", "Jupiter", createDate(now.plusDays(9), "13:00:00"), createDate(now.plusDays(1), "15:00:00"), 300},
-            {"Earth", "Pluto", createDate(now.plusDays(20), "06:00:00"), createDate(now.plusDays(20), "18:00:00"), 2000},
-            {"Pluto", "Earth", createDate(now.plusDays(13), "08:00:00"), createDate(now.plusDays(13), "20:00:00"), 2000}
+            {"Earth", "Neptune", createDate(now.plusDays(20), "06:00:00"), createDate(now.plusDays(20), "18:00:00"), 2000},
+            {"Neptune", "Earth", createDate(now.plusDays(13), "08:00:00"), createDate(now.plusDays(13), "20:00:00"), 2000}
         };
 
         for (Object[] data : flightData) {
