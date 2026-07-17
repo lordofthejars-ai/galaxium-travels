@@ -9,6 +9,7 @@ public interface ChatbotSupervisorAgent {
     //@InputGuardrails(BookingQuestionsInputGuardrail.class)
     @SupervisorAgent(
         responseStrategy = SupervisorResponseStrategy.SUMMARY,
-        subAgents = { BookingAgent.class, TimeAgent.class, CancellationAgent.class})
+        subAgents = { BookingAgent.class, TimeAgent.class,
+                CancellationAgent.class, HiveMindAgent.class})
     String chat(String request);
 }
