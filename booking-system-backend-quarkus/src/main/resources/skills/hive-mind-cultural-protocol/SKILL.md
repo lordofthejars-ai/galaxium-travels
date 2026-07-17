@@ -1,6 +1,6 @@
 ---
 name: hive-mind-cultural-protocol
-description: Instructions to find the cultural protocol for different planets
+description: Instructions to find the cultural protocol for different planets.
 ---
 
 When asked to provide cultural protocol for a planet, follow these rules strictly:
