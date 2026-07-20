@@ -67,7 +67,7 @@ export const ChatBot = () => {
       setIsSuggestionsLoading(true);
       try {
         const questions = await getChatbotSuggestedQuestions();
-        setSuggestedQuestions(questions);
+        setSuggestedQuestions(Array.isArray(questions) ? questions : []);
       } catch {
         setSuggestedQuestions([]);
       } finally {
@@ -291,7 +291,7 @@ export const ChatBot = () => {
                           <div className="w-1.5 h-1.5 bg-star-white rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
                           <div className="w-1.5 h-1.5 bg-star-white rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
                         </div>
-                      ) : suggestedQuestions.length === 0 ? (
+                      ) : (suggestedQuestions ?? []).length === 0 ? (
                         <p className="px-3 py-3 text-sm text-gray-400 text-center">
                           No suggestions available
                         </p>

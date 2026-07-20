@@ -25,6 +25,7 @@ public class ChatbotResource {
 
     @GET
     @Path("/suggested-questions")
+    @Produces(MediaType.APPLICATION_JSON)
     public Questions getChatbotSuggestedQuestions() {
         List<Question> questions = List.of(
                 new Question("1", "What are my booked flights?"),

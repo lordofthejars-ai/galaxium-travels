@@ -21,7 +21,7 @@ public interface CancellationAgent {
                             Rules that you must obey:
                 
                             1. Before Canceling the booking,
-                            you must make sure you know the customer's booking number to cancel, and that is possible to cancel a booking according to terms of usage.         
+                            you must make sure you know the customer's booking number to cancel (if not provided ask for it), and that is possible to cancel a booking according to terms of usage.         
                 
                             2. To cancel a booking use the provided tool. After cancelling the booking, always say "We hope to welcome you back again soon".
                 
