@@ -295,6 +295,20 @@ export const sendChatMessage = async (
   return response.data;
 };
 
+export interface SuggestedQuestion {
+  id: string;
+  text: string;
+}
+
+/**
+ * Get a list of suggested questions for the chatbot.
+ * Expected response shape: { questions: SuggestedQuestion[] }
+ */
+export const getChatbotSuggestedQuestions = async (): Promise<SuggestedQuestion[]> => {
+  const response = await api.get<{ questions: SuggestedQuestion[] }>('/chatbot/suggested-questions');
+  return response.data.questions;
+};
+
 export default api;
 
 // ==================== Ticket / Customer Support Endpoints ====================

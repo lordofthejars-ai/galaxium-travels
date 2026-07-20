@@ -1,9 +1,10 @@
 import { useState, useRef, useEffect } from 'react';
 import type { ReactNode } from 'react';
-import { MessageCircle, X, Send } from 'lucide-react';
+import { MessageCircle, X, Send, HelpCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import ReactMarkdown from 'react-markdown';
-import { sendChatMessage } from '../../services/api';
+import { sendChatMessage, getChatbotSuggestedQuestions } from '../../services/api';
+import type { SuggestedQuestion } from '../../services/api';
 import { useUser } from '../../hooks/useUser';
 
 interface Message {
@@ -26,7 +27,11 @@ export const ChatBot = () => {
   ]);
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [suggestedQuestions, setSuggestedQuestions] = useState<SuggestedQuestion[]>([]);
+  const [isSuggestionsLoading, setIsSuggestionsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const suggestionsRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -35,6 +40,46 @@ export const ChatBot = () => {
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
+
+  // Close suggestions dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (suggestionsRef.current && !suggestionsRef.current.contains(e.target as Node)) {
+        setShowSuggestions(false);
+      }
+    };
+    if (showSuggestions) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [showSuggestions]);
+
+  const handleToggleSuggestions = async () => {
+    if (showSuggestions) {
+      setShowSuggestions(false);
+      return;
+    }
+
+    setShowSuggestions(true);
+
+    // Fetch only if we don't have questions yet
+    if (suggestedQuestions.length === 0) {
+      setIsSuggestionsLoading(true);
+      try {
+        const questions = await getChatbotSuggestedQuestions();
+        setSuggestedQuestions(questions);
+      } catch {
+        setSuggestedQuestions([]);
+      } finally {
+        setIsSuggestionsLoading(false);
+      }
+    }
+  };
+
+  const handleSelectQuestion = (question: SuggestedQuestion) => {
+    setInputValue(question.text);
+    setShowSuggestions(false);
+  };
 
   const handleSendMessage = async () => {
     if (!inputValue.trim() || isLoading) return;
@@ -226,24 +271,79 @@ export const ChatBot = () => {
 
             {/* Input */}
             <div className="p-4 border-t border-white/10">
-              <div className="flex gap-2">
-                <input
-                  type="text"
-                  value={inputValue}
-                  onChange={(e) => setInputValue(e.target.value)}
-                  onKeyPress={handleKeyPress}
-                  placeholder="Type your message..."
-                  disabled={isLoading}
-                  className="flex-1 bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-star-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cosmic-purple focus:border-transparent transition-all duration-200 disabled:opacity-50"
-                />
-                <button
-                  onClick={handleSendMessage}
-                  disabled={!inputValue.trim() || isLoading}
-                  className="bg-cosmic-gradient text-white p-2 rounded-lg hover:shadow-lg hover:shadow-cosmic-purple/50 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
-                  aria-label="Send message"
-                >
-                  <Send size={20} />
-                </button>
+              {/* Suggested Questions Dropdown */}
+              <div className="relative" ref={suggestionsRef}>
+                <AnimatePresence>
+                  {showSuggestions && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 6 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: 6 }}
+                      transition={{ duration: 0.15 }}
+                      className="absolute bottom-full mb-2 left-0 right-0 bg-deep-space border border-white/15 rounded-lg overflow-hidden shadow-xl"
+                    >
+                      <p className="px-3 py-2 text-xs text-gray-400 border-b border-white/10">
+                        Suggested questions
+                      </p>
+                      {isSuggestionsLoading ? (
+                        <div className="flex items-center justify-center py-4 gap-1">
+                          <div className="w-1.5 h-1.5 bg-star-white rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+                          <div className="w-1.5 h-1.5 bg-star-white rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+                          <div className="w-1.5 h-1.5 bg-star-white rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+                        </div>
+                      ) : suggestedQuestions.length === 0 ? (
+                        <p className="px-3 py-3 text-sm text-gray-400 text-center">
+                          No suggestions available
+                        </p>
+                      ) : (
+                        <ul className="max-h-48 overflow-y-auto">
+                          {suggestedQuestions.map((q) => (
+                            <li key={q.id}>
+                              <button
+                                onClick={() => handleSelectQuestion(q)}
+                                className="w-full text-left px-3 py-2.5 text-sm text-star-white hover:bg-white/10 transition-colors duration-150"
+                              >
+                                {q.text}
+                              </button>
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+
+                <div className="flex gap-2">
+                  <button
+                    onClick={handleToggleSuggestions}
+                    aria-label="Show suggested questions"
+                    title="Suggested questions"
+                    className={`p-2 rounded-lg border transition-all duration-200 ${
+                      showSuggestions
+                        ? 'bg-cosmic-gradient border-transparent text-white'
+                        : 'bg-white/5 border-white/10 text-gray-400 hover:text-star-white hover:bg-white/10'
+                    }`}
+                  >
+                    <HelpCircle size={20} />
+                  </button>
+                  <input
+                    type="text"
+                    value={inputValue}
+                    onChange={(e) => setInputValue(e.target.value)}
+                    onKeyPress={handleKeyPress}
+                    placeholder="Type your message..."
+                    disabled={isLoading}
+                    className="flex-1 bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-star-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cosmic-purple focus:border-transparent transition-all duration-200 disabled:opacity-50"
+                  />
+                  <button
+                    onClick={handleSendMessage}
+                    disabled={!inputValue.trim() || isLoading}
+                    className="bg-cosmic-gradient text-white p-2 rounded-lg hover:shadow-lg hover:shadow-cosmic-purple/50 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                    aria-label="Send message"
+                  >
+                    <Send size={20} />
+                  </button>
+                </div>
               </div>
             </div>
           </motion.div>
