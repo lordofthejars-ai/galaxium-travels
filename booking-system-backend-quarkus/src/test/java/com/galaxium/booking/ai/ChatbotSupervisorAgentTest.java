@@ -12,7 +12,7 @@ public class ChatbotSupervisorAgentTest {
 
     @Test
     public void shouldBlockNoneBookingQuestions() {
-        agent.chat("My user id is 1, Can you list my bookings?");
+        agent.chat(1L,"My user id is 1, Can you list my bookings?");
     }
 
 }

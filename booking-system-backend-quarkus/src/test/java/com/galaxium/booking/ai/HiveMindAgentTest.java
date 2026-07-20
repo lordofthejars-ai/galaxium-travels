@@ -13,7 +13,7 @@ public class HiveMindAgentTest {
     @Test
     public void testCulturalProtocol() {
         String protocol = hiveMindAgent
-            .findCulturalProtocol("Can you provide me the cultural protocol for Mars?");
+            .findCulturalProtocol(1L,"Can you provide me the cultural protocol for Mars?");
         System.out.println(protocol);
     }
 

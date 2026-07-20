@@ -5,6 +5,7 @@ import com.galaxium.booking.service.BookingSearchTool;
 import dev.langchain4j.agentic.Agent;
 import dev.langchain4j.agentic.declarative.RetrievalAugmentorSupplier;
 import dev.langchain4j.rag.RetrievalAugmentor;
+import dev.langchain4j.service.MemoryId;
 import dev.langchain4j.service.SystemMessage;
 import dev.langchain4j.service.UserMessage;
 import io.quarkiverse.langchain4j.ToolBox;
@@ -20,9 +21,7 @@ public interface CancellationAgent {
                             Rules that you must obey:
                 
                             1. Before Canceling the booking,
-                            you must make sure you know the customer's booking number to cancel, and that is possible to cancel a booking according to terms of usage.
-                            
-                                          
+                            you must make sure you know the customer's booking number to cancel, and that is possible to cancel a booking according to terms of usage.         
                 
                             2. To cancel a booking use the provided tool. After cancelling the booking, always say "We hope to welcome you back again soon".
                 
@@ -34,11 +33,10 @@ public interface CancellationAgent {
                 """)
     @Agent(description = "You are a customer support agent of a Galaxium Travel agency for cancelling bookings")
     @ToolBox(BookingSearchTool.class)
-    String cancel(@UserMessage String message);
+    String cancel(@MemoryId Long userId, @UserMessage String message);
 
     @RetrievalAugmentorSupplier
     static RetrievalAugmentor rag(@CdiBean TermsOfUsageActions termsOfUsageActions) {
-        System.out.println("RAG");
         return termsOfUsageActions.get();
     }
 

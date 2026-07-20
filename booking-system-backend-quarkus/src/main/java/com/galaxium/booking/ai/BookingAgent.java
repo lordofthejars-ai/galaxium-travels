@@ -3,6 +3,7 @@ package com.galaxium.booking.ai;
 import com.galaxium.booking.service.BookingSearchTool;
 import com.galaxium.booking.service.FlightSearchTool;
 import dev.langchain4j.agentic.Agent;
+import dev.langchain4j.service.MemoryId;
 import dev.langchain4j.service.SystemMessage;
 import dev.langchain4j.service.UserMessage;
 import dev.langchain4j.service.guardrail.InputGuardrails;
@@ -24,5 +25,5 @@ public interface BookingAgent {
         outputKey = "answer")
     @InputGuardrails(BookingQuestionsInputGuardrail.class)
     @ToolBox({BookingSearchTool.class, FlightSearchTool.class})
-    String chat(@UserMessage String userMessage);
+    String chat(@MemoryId Long userId, @UserMessage String userMessage);
 }
