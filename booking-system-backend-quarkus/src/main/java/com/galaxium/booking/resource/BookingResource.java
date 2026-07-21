@@ -100,6 +100,12 @@ public class BookingResource {
         return boardingPassStorage.getBoardingPass(boardingPassId);
     }
 
+    @GET
+    @Path("/users/flight/{flightId}")
+    public List<UserDto> findUsersByFlight(@RestPath Long flightId) {
+        return bookingService.findUsersByFlight(flightId);
+    }
+
     @POST
     @Path("/cancel/{bookingId}")
     @Produces(MediaType.APPLICATION_JSON)

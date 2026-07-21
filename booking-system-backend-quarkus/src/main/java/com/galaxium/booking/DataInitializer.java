@@ -69,7 +69,7 @@ public class DataInitializer {
         List<User> users = new ArrayList<>();
         
         String[][] userData = {
-            {"Alice", "alice@example.com"},
+            {"Alice", "alice@example.com", "880343953"},
             {"Bob", "bob@example.com"},
             {"Charlie", "charlie@example.com"},
             {"Diana", "diana@example.com"},
@@ -85,6 +85,11 @@ public class DataInitializer {
             User user = new User();
             user.name = data[0];
             user.email = data[1];
+
+            if (data[2] != null) {
+                user.telegramId = Long.parseLong(data[2]);
+            }
+
             user.persist();
             users.add(user);
         }

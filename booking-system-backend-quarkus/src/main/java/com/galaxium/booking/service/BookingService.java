@@ -1,9 +1,6 @@
 package com.galaxium.booking.service;
 
-import com.galaxium.booking.dto.AddOnDto;
-import com.galaxium.booking.dto.BookingDto;
-import com.galaxium.booking.dto.ErrorResponse;
-import com.galaxium.booking.dto.Result;
+import com.galaxium.booking.dto.*;
 import com.galaxium.booking.entity.Booking;
 import com.galaxium.booking.entity.BookingStatus;
 import com.galaxium.booking.entity.Flight;
@@ -216,6 +213,14 @@ public class BookingService {
         booking.persist();
 
         return Result.success(BookingDto.from(booking));
+    }
+
+    public List<UserDto> findUsersByFlight(Long flightId) {
+        return Booking
+                .findByFlightId(flightId)
+                .stream()
+                .map(b -> UserDto.from(b.user))
+                .toList();
     }
 
     public BookingDto findBookingById(Long id) {

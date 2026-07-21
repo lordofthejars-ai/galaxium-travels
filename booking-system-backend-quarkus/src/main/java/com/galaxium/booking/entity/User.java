@@ -26,6 +26,9 @@ public class User extends PanacheEntity {
     @Column(unique = true, nullable = false)
     public String email;
 
+    @Column(unique = true)
+    public Long telegramId;
+
     /**
      * Find user by email (case-insensitive).
      * Email is automatically lowercased before storage.

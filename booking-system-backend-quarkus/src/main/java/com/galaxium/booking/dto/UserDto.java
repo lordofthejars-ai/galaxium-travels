@@ -12,22 +12,24 @@ public class UserDto {
     public Long id;
     
     public String name;
+    public long telegramId;
     public String email;
 
     public UserDto() {
     }
 
-    public UserDto(Long id, String name, String email) {
+    public UserDto(Long id, String name, String email, long telegramId) {
         this.id = id;
         this.name = name;
         this.email = email;
+        this.telegramId = telegramId;
     }
 
     /**
      * Create DTO from entity.
      */
     public static UserDto from(User user) {
-        return new UserDto(user.id, user.name, user.email);
+        return new UserDto(user.id, user.name, user.email, user.telegramId);
     }
 }
 
