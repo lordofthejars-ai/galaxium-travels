@@ -86,7 +86,7 @@ public class DataInitializer {
             user.name = data[0];
             user.email = data[1];
 
-            if (data[2] != null) {
+            if (data.length > 2 && data[2] != null) {
                 user.telegramId = Long.parseLong(data[2]);
             }
 

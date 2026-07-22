@@ -35,11 +35,14 @@ class NotificationRouterTest {
     @Inject
     ProducerTemplate producerTemplate;
 
+    @Inject
+    NotificationRouter notificationRouter;
+
     @BeforeEach
     void setUp() throws Exception {
         if (camelContext.getRouteController().getRouteStatus("kafka-to-telegram") == null) {
-            // Add the route from the NotificationRouter (route discovery is disabled)
-            camelContext.addRoutes(new NotificationRouter());
+            // Use the CDI-managed bean so @Inject fields (e.g. passengerService) are populated
+            camelContext.addRoutes(notificationRouter);
         }
 
         // Replace kafka source with a direct endpoint for testing
@@ -57,7 +60,8 @@ class NotificationRouterTest {
         mockTelegram.expectedMessageCount(1);
         mockTelegram.expectedBodiesReceived("Hello Telegram");
 
-        producerTemplate.sendBody("direct:test-notifications", "Hello Telegram");
+        producerTemplate.sendBody("direct:test-notifications",
+            "{\"flightId\": 1, \"message\": \"Hello Telegram\"}");
 
         mockTelegram.assertIsSatisfied();
     }

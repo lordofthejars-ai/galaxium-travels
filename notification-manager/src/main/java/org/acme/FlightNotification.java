@@ -1,6 +1,6 @@
 package org.acme;
 
 public record FlightNotification(
-        String flightId,
+        long flightId,
         String message) {
 }

@@ -70,7 +70,7 @@ public class Booking extends PanacheEntity {
      * Find all bookings for a specific flight.
      */
     public static java.util.List<Booking> findByFlightId(Long flightId) {
-        return find("flightId", flightId).list();
+        return find("flight.id", flightId).list();
     }
 
     /**

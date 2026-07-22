@@ -216,10 +216,12 @@ public class BookingService {
     }
 
     public List<UserDto> findUsersByFlight(Long flightId) {
+
         return Booking
                 .findByFlightId(flightId)
                 .stream()
                 .map(b -> UserDto.from(b.user))
+                .distinct()
                 .toList();
     }
 

@@ -18,6 +18,7 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriBuilder;
+import org.jboss.logging.Logger;
 import org.jboss.resteasy.reactive.RestPath;
 
 import java.net.URI;
@@ -39,6 +40,9 @@ public class BookingResource {
 
     @Inject
     BoardingPassStorage boardingPassStorage;
+
+    @Inject
+    Logger logger;
 
     @POST
     @Path("/book")
@@ -103,6 +107,9 @@ public class BookingResource {
     @GET
     @Path("/users/flight/{flightId}")
     public List<UserDto> findUsersByFlight(@RestPath Long flightId) {
+
+        logger.infof("Getting Users for Flight %s", flightId);
+
         return bookingService.findUsersByFlight(flightId);
     }
 
