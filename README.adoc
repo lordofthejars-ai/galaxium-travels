@@ -14,7 +14,7 @@ Dynamic Pricing:: - Class-based multipliers (1x, 2.5x, 5x) applied to base fligh
 Type-Safe:: - Full TypeScript frontend and Java type hints with strict validation
 Real-Time Updates:: - Live seat availability per class and booking status
 User Management:: - Simple name/email authentication
-AI:: - Chat Bot integration
+AI:: - Chat Bot integration / MCP / A2A / Human-In-The-Loop / Docling
 
 == 🚀 Manual Quick Start
 
@@ -64,14 +64,44 @@ cd inventory-hold-service-quarkus
 
 You *only* need this service if you plan to book flights.
 
-=== Time MCP Server
+=== Time Dilation MCP Server
 
 [source, bash]
 ----
-cd solar-system-timeclock
+cd time-dilation-calculator
 ./mvnw quarkus:dev
 ----
 
-You *only* need to start this server if you plan to use the ChatBot to convert dates.
+You *only* need to start this server if you plan to use the ChatBot to calculate the time dilation in the ChatBot.
+
+=== Incidence Manager
+
+To start the incidence manager, first you need to start the Incidence Response Agent:
+
+[source, bash]
+----
+cd incidence-response-agent
+./mvnw quarkus:dev
+----
+
+And then you can start the Incidence Manager:
+
+[source, bash]
+----
+cd incidence-manager
+./mvnw quarkus:dev
+----
+
+You *only* need these services if you plan to use the Customer Support.
+
+=== Notification Manager
+
+[source, bash]
+----
+cd notification-manager
+./mvnw quarkus:dev
+----
+
+You *only* need this service if you plan to test notifications.
 
 Then you can go to the browser http://localhost:5173/ and start using the app.
